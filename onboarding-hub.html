@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Carketa / VelociFI — Onboarding Hub</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#F8F7F3;color:#2C2C2A;min-height:100vh}
+.page{max-width:1100px;margin:0 auto;padding:0 28px}
+.site-header{background:#fff;border-bottom:1px solid #E0DED7;padding:28px 28px 20px}
+.site-header .inner{max-width:1100px;margin:0 auto}
+.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#888780;margin-bottom:8px}
+.site-header h1{font-size:26px;font-weight:700;color:#1F4E79;margin-bottom:4px}
+.site-header p{font-size:14px;color:#5F5E5A;line-height:1.5}
+.tab-nav{background:#fff;border-bottom:1px solid #E0DED7;position:sticky;top:0;z-index:100;box-shadow:0 2px 6px rgba(44,44,42,.05)}
+.tab-nav .inner{max-width:1100px;margin:0 auto;display:flex;padding:0 28px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#D3D1C7 transparent}
+.tab-nav .inner::-webkit-scrollbar{height:4px}
+.tab-nav .inner::-webkit-scrollbar-thumb{background:#D3D1C7;border-radius:2px}
+.tab-btn{padding:14px 24px;font-size:14px;font-family:Arial,Helvetica,sans-serif;font-weight:500;color:#888780;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-1px;transition:all .15s ease;white-space:nowrap;flex-shrink:0}
+.tab-btn:hover{color:#2C2C2A}
+.tab-btn:focus-visible{outline:2px solid #1F4E79;outline-offset:-4px;border-radius:4px}
+.tab-btn.active{color:#1F4E79;border-bottom-color:#1F4E79;font-weight:700}
+.tab-pane{display:none;padding:32px 0 56px}
+.tab-pane.active{display:block}
+.pane-header{margin-bottom:24px}
+.pane-header h2{font-size:20px;font-weight:700;color:#1F4E79;margin-bottom:4px}
+.pane-header p{font-size:14px;color:#5F5E5A;line-height:1.5}
+.chart-wrap{background:#fff;border:1px solid #E0DED7;border-radius:12px;padding:28px 24px 20px;margin-bottom:20px;overflow-x:auto}
+svg text{font-family:Arial,Helvetica,sans-serif}
+.th{font-size:14px;font-weight:600}.ts{font-size:12px;font-weight:400}
+.entity-box,.platform-box{cursor:pointer;transition:opacity .15s}
+.entity-box:hover,.platform-box:hover{opacity:.82}
+.entity-box:focus,.platform-box:focus{outline:none}
+.entity-box:focus-visible>rect,.platform-box:focus-visible>rect{stroke-width:2.5;filter:drop-shadow(0 0 3px rgba(31,78,121,.4))}
+.vc-detail{display:none;background:#fff;border:1px solid #D3D1C7;border-radius:10px;padding:24px 28px;margin-bottom:20px;position:relative;animation:fadeIn .2s ease}
+.vc-detail.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.vc-detail .close-btn{position:absolute;top:16px;right:20px;font-size:18px;cursor:pointer;color:#888780;background:none;border:none;line-height:1;padding:4px;border-radius:4px}
+.vc-detail .close-btn:hover{color:#2C2C2A}
+.vc-detail .close-btn:focus-visible{outline:2px solid #1F4E79;outline-offset:2px}
+.vc-detail h2{font-size:16px;font-weight:700;margin-bottom:12px;color:#2C2C2A}
+.vc-detail p{font-size:14px;line-height:1.65;color:#5F5E5A;margin-bottom:10px}
+.vc-detail p:last-child{margin-bottom:0}
+.vc-detail .tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-bottom:12px}
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:8px}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:12px;color:#5F5E5A}
+.legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.vc-footer{font-size:12px;color:#888780;line-height:1.6;margin-top:12px;padding-top:12px;border-top:1px solid #E0DED7}
+.hint{font-size:12px;color:#B4B2A9;margin-bottom:14px;font-style:italic}
+.fi-extras-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#B4B2A9;margin:28px 0 14px}
+.fi-section{background:#fff;border:1px solid #E0DED7;border-radius:12px;overflow:hidden;margin-bottom:16px}
+.fi-section-hdr{padding:14px 22px;border-bottom:1px solid #E0DED7;background:#FAFAF7}
+.fi-section-hdr h3{font-size:13px;font-weight:700;color:#2C2C2A}
+.fi-section-hdr p{font-size:12px;color:#888780;margin-top:3px}
+.fi-section table{width:100%;border-collapse:collapse}
+.fi-section th{padding:10px 22px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#B4B2A9;border-bottom:1px solid #E0DED7;background:#FAFAF7}
+.fi-section td{padding:11px 22px;font-size:13px;color:#5F5E5A;border-bottom:1px solid #F5F3EE;line-height:1.5;vertical-align:top}
+.fi-section tr:last-child td{border-bottom:none}
+.fi-section tr:hover td{background:#FAFAF7}
+.fi-section td:first-child{color:#2C2C2A;font-weight:600;white-space:nowrap}
+.role-block{background:#EBF2FC;border:1px solid #A5C3E8;border-radius:10px;padding:20px 24px;margin-bottom:8px}
+.role-block h3{font-size:13px;font-weight:700;color:#1F4E79;margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em}
+.role-block p{font-size:13px;color:#2C2C2A;line-height:1.65;margin-bottom:8px}
+.role-block p:last-child{margin-bottom:0}
+.prod-search-wrap{position:relative;margin-bottom:20px}
+.prod-search-wrap input{width:100%;padding:11px 40px 11px 14px;border:1px solid #E0DED7;border-radius:8px;font-size:14px;font-family:Arial,Helvetica,sans-serif;color:#2C2C2A;background:#fff;outline:none;transition:border-color .15s ease}
+.prod-search-wrap input:focus{border-color:#1F4E79}
+.prod-search-clear{display:none;position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;color:#888780;font-size:16px;background:none;border:none;line-height:1;padding:4px;border-radius:4px}
+.prod-search-clear:focus-visible{outline:2px solid #1F4E79;outline-offset:2px}
+.prod-jump{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.prod-jump a{display:inline-block;padding:6px 14px;background:#fff;border:1px solid #E0DED7;border-radius:20px;font-size:12px;color:#5F5E5A;text-decoration:none;cursor:pointer;transition:all .15s ease}
+.prod-jump a:hover{background:#F1EFE8;border-color:#D3D1C7;color:#2C2C2A}
+.prod-jump a:focus-visible{outline:2px solid #1F4E79;outline-offset:2px}
+.accordion{display:flex;flex-direction:column;gap:10px}
+.acc-item{background:#fff;border:1px solid #E0DED7;border-radius:12px;overflow:hidden;scroll-margin-top:72px}
+.acc-header{width:100%;display:flex;align-items:center;gap:14px;padding:18px 22px;background:none;border:none;cursor:pointer;text-align:left;font-family:Arial,Helvetica,sans-serif;transition:background .15s ease}
+.acc-header:hover{background:#FAFAF7}
+.acc-header:focus-visible{outline:2px solid #1F4E79;outline-offset:-2px;border-radius:8px}
+.acc-item.open>.acc-header{background:#F8F7F3;border-bottom:1px solid #E0DED7}
+.acc-num{width:26px;height:26px;border-radius:50%;background:#1F4E79;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.acc-title{font-size:15px;font-weight:700;color:#2C2C2A;flex:1}
+.acc-sub{font-size:12px;color:#B4B2A9;margin-left:auto;margin-right:12px;white-space:nowrap}
+.acc-chevron{color:#B4B2A9;font-size:13px;flex-shrink:0;transition:transform .2s ease}
+.acc-item.open>.acc-header .acc-chevron{transform:rotate(180deg)}
+.acc-body{display:none;padding:24px 26px}
+.acc-item.open>.acc-body{display:block;animation:fadeIn .2s ease}
+.sub-head{font-size:11px;font-weight:700;color:#1F4E79;margin:20px 0 10px;text-transform:uppercase;letter-spacing:.08em}
+.sub-head:first-child{margin-top:0}
+.body-text{font-size:13px;color:#5F5E5A;line-height:1.65;margin-bottom:10px}
+.csm-note{background:#EBF2FC;border-left:3px solid #1F4E79;border-radius:0 8px 8px 0;padding:12px 16px;margin:14px 0;font-size:12.5px;color:#2C2C2A;line-height:1.6}
+.csm-note strong{color:#1F4E79}
+.info-table{width:100%;border-collapse:collapse;margin:8px 0 14px;border-radius:8px;overflow:hidden;border:1px solid #E0DED7}
+.info-table th{padding:9px 14px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#B4B2A9;border-bottom:1px solid #E0DED7;background:#FAFAF7}
+.info-table td{padding:10px 14px;font-size:13px;color:#5F5E5A;border-bottom:1px solid #F5F3EE;line-height:1.5;vertical-align:top}
+.info-table tr:last-child td{border-bottom:none}
+.info-table tr:hover td{background:#FAFAF7}
+.info-table td:first-child{color:#2C2C2A;font-weight:600}
+.step-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin:8px 0 14px}
+.step-item{display:flex;gap:14px;align-items:flex-start}
+.step-num{min-width:24px;height:24px;border-radius:50%;background:#185FA5;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-content{font-size:13px;color:#5F5E5A;line-height:1.65;flex:1}
+.step-content strong{color:#2C2C2A}
+.bullet-list{list-style:none;display:flex;flex-direction:column;gap:5px;margin:6px 0 12px}
+.bullet-list li{font-size:13px;color:#5F5E5A;position:relative;padding-left:16px;line-height:1.55}
+.bullet-list li::before{content:"\0203A";color:#B4B2A9;position:absolute;left:0;top:-1px;font-size:14px;line-height:1.55}
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.filter-btn{padding:6px 16px;border-radius:20px;border:1px solid #E0DED7;background:#fff;color:#888780;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s ease;font-family:Arial,Helvetica,sans-serif}
+.filter-btn:hover{background:#F1EFE8;border-color:#D3D1C7;color:#2C2C2A}
+.filter-btn:focus-visible{outline:2px solid #1F4E79;outline-offset:2px}
+.filter-btn.active{background:#1F4E79;border-color:#1F4E79;color:#fff;font-weight:700}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px;margin-bottom:36px}
+.tool-card{background:#fff;border:1px solid #E0DED7;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;box-shadow:0 1px 3px rgba(44,44,42,.05)}
+.tool-card:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(44,44,42,.1);border-color:#D3D1C7}
+.tool-card.hidden{display:none}
+.card-stripe{height:3px;width:100%;flex-shrink:0}
+.card-stripe.crm{background:#B84900}.card-stripe.analytics{background:#534AB7}
+.card-stripe.comm{background:#0F6E56}.card-stripe.dev{background:#185FA5}
+.card-stripe.product{background:#1F4E79}.card-stripe.storage{background:#0D7C72}
+.card-body{padding:20px 22px;flex:1;display:flex;flex-direction:column}
+.card-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.card-icon{font-size:22px;line-height:1;flex-shrink:0;margin-top:2px}
+.card-title-group{flex:1;min-width:0}
+.card-title{font-size:16px;font-weight:700;color:#2C2C2A;margin-bottom:5px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.badge.crm{background:#FDF0E5;color:#8C3600;border:1px solid #F2C79E}
+.badge.analytics{background:#EEEDFE;color:#3C3489;border:1px solid #C5C2F5}
+.badge.comm{background:#E1F5EE;color:#085041;border:1px solid #9ADBC3}
+.badge.dev{background:#E6F1FB;color:#0C447C;border:1px solid #A8C9EE}
+.badge.product{background:#EBF2FC;color:#1F4E79;border:1px solid #A5C3E8}
+.badge.storage{background:#E0F5F1;color:#0A5F58;border:1px solid #8ED6CE}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px;background:#3B9A5A;animation:pulse-dot 2.4s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(59,154,90,.3)}50%{box-shadow:0 0 0 5px rgba(59,154,90,0)}}
+.card-desc{font-size:13px;color:#5F5E5A;line-height:1.65;margin-bottom:12px}
+.card-details{list-style:none;margin-bottom:18px;display:flex;flex-direction:column;gap:7px;flex:1}
+.card-details li{font-size:12px;color:#5F5E5A;position:relative;padding-left:16px;line-height:1.55}
+.card-details li::before{content:"\0203A";color:#B4B2A9;position:absolute;left:0;top:-1px;font-size:14px;line-height:1.55}
+code{font-family:"SF Mono","Fira Code","Menlo",monospace;font-size:11px;background:#F1EFE8;padding:1px 6px;border-radius:4px;color:#1F4E79;border:1px solid #D3D1C7}
+.card-footer{display:flex;gap:8px;margin-top:auto}
+.btn-access{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:9px 14px;border-radius:8px;background:#EBF2FC;border:1px solid #A5C3E8;color:#1F4E79;font-size:12.5px;font-weight:700;text-decoration:none;transition:all .15s ease;font-family:Arial,Helvetica,sans-serif}
+.btn-access:hover{background:#D6E8FA;border-color:#1F4E79}
+.btn-access:focus-visible,.btn-sub:focus-visible{outline:2px solid #1F4E79;outline-offset:2px}
+.btn-sub{display:inline-flex;align-items:center;justify-content:center;padding:9px 12px;border-radius:8px;background:#F8F7F3;border:1px solid #E0DED7;color:#5F5E5A;font-size:12px;font-weight:500;text-decoration:none;transition:all .15s ease;white-space:nowrap;font-family:Arial,Helvetica,sans-serif}
+.btn-sub:hover{background:#F1EFE8;color:#2C2C2A;border-color:#D3D1C7}
+.section-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#B4B2A9;margin-bottom:14px;margin-top:32px}
+.ref-block{background:#fff;border:1px solid #E0DED7;border-radius:12px;overflow:hidden;margin-bottom:14px}
+.ref-block-header{padding:14px 22px;border-bottom:1px solid #E0DED7;background:#FAFAF7;display:flex;align-items:center;gap:10px}
+.ref-block-header h3{font-size:13px;font-weight:700;color:#2C2C2A}
+.ref-block-header .sub{font-size:12px;color:#B4B2A9;margin-left:auto}
+.qr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.qr-item{padding:14px 22px;border-right:1px solid #E0DED7;border-bottom:1px solid #E0DED7}
+.qr-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#B4B2A9;margin-bottom:6px}
+.qr-val{font-size:13px;color:#2C2C2A;font-weight:600}
+.qr-note{font-size:11px;color:#B4B2A9;margin-top:4px}
+.ref-block table{width:100%;border-collapse:collapse}
+.ref-block th{padding:10px 22px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#B4B2A9;border-bottom:1px solid #E0DED7;background:#FAFAF7}
+.ref-block td{padding:11px 22px;font-size:13px;color:#5F5E5A;border-bottom:1px solid #F5F3EE}
+.ref-block tr:last-child td{border-bottom:none}
+.ref-block tr:hover td{background:#FAFAF7}
+.ref-block td:first-child{color:#2C2C2A;font-weight:600}
+.sys-footer{font-size:13px;color:#5F5E5A;padding:16px 20px;background:#EBF2FC;border:1px solid #A5C3E8;border-radius:10px;line-height:1.65;margin-top:8px;display:flex;align-items:flex-start;gap:10px}
+.sys-footer strong{color:#1F4E79}
+mark.search-hl{background:#FFF176;color:#1a1a00;padding:0 3px;border-radius:3px;font-weight:600}
+.search-results{background:#fff;border:1px solid #D3D1C7;border-radius:10px;margin-bottom:20px;overflow:hidden;box-shadow:0 4px 16px rgba(44,44,42,.08);animation:fadeIn .15s ease}
+.sr-head{padding:10px 16px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#888780;background:#FAFAF7;border-bottom:1px solid #E0DED7}
+.sr-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;cursor:pointer;border-bottom:1px solid #F5F3EE;transition:background .12s ease}
+.sr-item:hover{background:#EBF2FC}
+.sr-item:focus-visible{outline:2px solid #1F4E79;outline-offset:-2px;background:#EBF2FC}
+.sr-item:last-child{border-bottom:none}
+.sr-num{width:22px;height:22px;border-radius:50%;background:#1F4E79;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.sr-main{flex:1;min-width:0}
+.sr-title{font-size:13px;font-weight:700;color:#1F4E79;margin-bottom:3px}
+.sr-snippet{font-size:12px;color:#5F5E5A;line-height:1.55}
+.sr-count{font-size:11px;font-weight:600;color:#888780;background:#F1EFE8;border:1px solid #E0DED7;border-radius:10px;padding:2px 8px;flex-shrink:0;margin-top:2px}
+.sr-empty{padding:18px 16px;font-size:13px;color:#888780;text-align:center}
+.phase-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;margin-bottom:8px}
+.phase-card{background:#fff;border:1px solid #E0DED7;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 3px rgba(44,44,42,.05)}
+.phase-stripe{height:3px;width:100%;flex-shrink:0}
+.phase-stripe.p1{background:#185FA5}.phase-stripe.p2{background:#534AB7}.phase-stripe.p3{background:#0F6E56}
+.phase-head{padding:16px 20px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.phase-name{font-size:14px;font-weight:700;color:#2C2C2A}
+.phase-target{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:12px;white-space:nowrap;flex-shrink:0}
+.phase-target.p1{background:#E6F1FB;color:#0C447C;border:1px solid #A8C9EE}
+.phase-target.p2{background:#EEEDFE;color:#3C3489;border:1px solid #C5C2F5}
+.phase-target.p3{background:#E1F5EE;color:#085041;border:1px solid #9ADBC3}
+.phase-body{padding:0 20px 18px;flex:1;display:flex;flex-direction:column}
+.phase-label{font-size:11px;font-weight:700;color:#1F4E79;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.exit-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.exit-list li{display:flex;gap:10px;font-size:12.5px;color:#5F5E5A;line-height:1.55}
+.exit-num{min-width:20px;height:20px;border-radius:50%;background:#1F4E79;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.warn-note{background:#FDF0E5;border-left:3px solid #B84900;border-radius:0 8px 8px 0;padding:11px 14px;font-size:12px;color:#712B13;line-height:1.6;margin-top:auto}
+.warn-note strong{color:#8C3600}
+.pb-card{background:#fff;border:1px solid #E0DED7;border-radius:12px;padding:22px 24px;margin-bottom:8px}
+.pb-card h3{font-size:14px;font-weight:700;color:#2C2C2A;margin-bottom:12px}
+.pb-card p{font-size:13px;color:#5F5E5A;line-height:1.65;margin-bottom:10px}
+.pb-card p:last-child{margin-bottom:0}
+.funnel{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:14px 0}
+.funnel-step{background:#EBF2FC;border:1px solid #A5C3E8;border-radius:8px;padding:9px 14px;font-size:12.5px;font-weight:700;color:#1F4E79;text-align:center}
+.funnel-arrow{color:#B4B2A9;font-size:15px;padding:0 2px;flex-shrink:0}
+.tf-grid{display:grid;grid-template-columns:1fr 1fr}
+.tf-col{padding:16px 22px}
+.tf-col+.tf-col{border-left:1px solid #E0DED7}
+.tf-col h4{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#1F4E79;margin-bottom:10px}
+.tf-col ol{margin-left:18px;display:flex;flex-direction:column;gap:6px}
+.tf-col li{font-size:12.5px;color:#5F5E5A;line-height:1.5}
+@media(max-width:768px){
+  .tf-grid{grid-template-columns:1fr}
+  .tf-col+.tf-col{border-left:none;border-top:1px solid #E0DED7}
+  .tool-grid{grid-template-columns:1fr}
+  .page{padding:0 16px}
+  .site-header{padding:20px 16px 16px}
+  .tab-btn{padding:12px 14px;font-size:13px}
+  .tab-nav .inner{padding:0 16px}
+  .acc-sub{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+  .status-dot{animation:none}
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <div class="eyebrow">Carketa / VelociFI &mdash; New Hire Reference</div>
+    <h1>Onboarding Hub</h1>
+    <p>Everything a new team member needs to get up to speed &mdash; the industry, the platform, and how we work.</p>
+  </div>
+</header>
+<nav class="tab-nav">
+  <div class="inner" role="tablist" aria-label="Onboarding sections">
+    <button class="tab-btn active" data-tab="fi" role="tab" aria-selected="true" aria-controls="tab-fi" id="tabbtn-fi">F&amp;I Industry</button>
+    <button class="tab-btn" data-tab="product" role="tab" aria-selected="false" aria-controls="tab-product" id="tabbtn-product">The Product</button>
+    <button class="tab-btn" data-tab="playbook" role="tab" aria-selected="false" aria-controls="tab-playbook" id="tabbtn-playbook">CSM Playbook</button>
+    <button class="tab-btn" data-tab="lifecycle" role="tab" aria-selected="false" aria-controls="tab-lifecycle" id="tabbtn-lifecycle">Onboarding &amp; Expansion</button>
+    <button class="tab-btn" data-tab="systems" role="tab" aria-selected="false" aria-controls="tab-systems" id="tabbtn-systems">Systems &amp; Tools</button>
+  </div>
+</nav>
+<div class="page">
+
+<!-- TAB 1: F&I INDUSTRY -->
+<div class="tab-pane active" id="tab-fi" role="tabpanel" aria-labelledby="tabbtn-fi">
+  <div class="pane-header">
+    <h2>F&amp;I Industry Value Chain</h2>
+    <p>Every player in the chain &mdash; and where VelociFI and AmpliFI fit in. Click any box to learn more.</p>
+  </div>
+  <div class="vc-detail" id="vc-detail" role="region" aria-live="polite" aria-label="Value chain detail">
+    <button class="close-btn" data-action="close-vc" aria-label="Close detail panel">&#x2715;</button>
+    <div id="vc-tag" class="tag"></div>
+    <h2 id="vc-title"></h2>
+    <div id="vc-body"></div>
+  </div>
+  <div class="chart-wrap">
+    <p class="hint">Click any box to expand details. Use Tab and Enter for keyboard navigation.</p>
+    <svg width="100%" viewBox="0 0 680 468" aria-label="F&amp;I value chain diagram">
+    <defs>
+      <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+      <marker id="arrP" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#7F77DD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+      <marker id="arrB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#378ADD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+      <marker id="arrC" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#D85A30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+    </defs>
+    <g class="entity-box" data-vc="insurance" tabindex="0" role="button" aria-label="Insurance Company. Underwrites financial risk."><rect x="10" y="50" width="200" height="48" rx="8" fill="#F1EFE8" stroke="#888780" stroke-width="0.5"/><text class="th" x="110" y="70" text-anchor="middle" dominant-baseline="central" fill="#444441">Insurance Co.</text><text class="ts" x="110" y="88" text-anchor="middle" dominant-baseline="central" fill="#5F5E5A">Underwrites financial risk</text></g>
+    <g class="entity-box" data-vc="admin" tabindex="0" role="button" aria-label="Admin or TPA. Rates, products, pays claims."><rect x="10" y="110" width="200" height="48" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/><text class="th" x="110" y="130" text-anchor="middle" dominant-baseline="central" fill="#3C3489">Admin (TPA)</text><text class="ts" x="110" y="148" text-anchor="middle" dominant-baseline="central" fill="#534AB7">Rates, products, pays claims</text></g>
+    <g class="entity-box" data-vc="agency" tabindex="0" role="button" aria-label="F and I Agency. Manages agents and products."><rect x="10" y="170" width="200" height="48" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/><text class="th" x="110" y="190" text-anchor="middle" dominant-baseline="central" fill="#085041">F&amp;I Agency</text><text class="ts" x="110" y="208" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Manages agents and products</text></g>
+    <g class="entity-box" data-vc="agent" tabindex="0" role="button" aria-label="F and I Agent. Sells products to dealers."><rect x="10" y="230" width="200" height="48" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/><text class="th" x="110" y="250" text-anchor="middle" dominant-baseline="central" fill="#0C447C">F&amp;I Agent</text><text class="ts" x="110" y="268" text-anchor="middle" dominant-baseline="central" fill="#185FA5">Sells products to dealers</text></g>
+    <g class="entity-box" data-vc="dealer" tabindex="0" role="button" aria-label="Dealer. F and I office sells to buyer."><rect x="10" y="290" width="200" height="48" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/><text class="th" x="110" y="310" text-anchor="middle" dominant-baseline="central" fill="#712B13">Dealer</text><text class="ts" x="110" y="328" text-anchor="middle" dominant-baseline="central" fill="#993C1D">F&amp;I office sells to buyer</text></g>
+    <g class="entity-box" data-vc="consumer" tabindex="0" role="button" aria-label="Consumer. Buys vehicle and coverage."><rect x="10" y="350" width="200" height="48" rx="8" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.5"/><text class="th" x="110" y="370" text-anchor="middle" dominant-baseline="central" fill="#27500A">Consumer</text><text class="ts" x="110" y="388" text-anchor="middle" dominant-baseline="central" fill="#3B6D11">Buys vehicle and coverage</text></g>
+    <line x1="110" y1="98" x2="110" y2="104" stroke="#888780" stroke-width="1.5" marker-end="url(#arr)"/>
+    <line x1="110" y1="158" x2="110" y2="164" stroke="#888780" stroke-width="1.5" marker-end="url(#arr)"/>
+    <line x1="110" y1="218" x2="110" y2="224" stroke="#888780" stroke-width="1.5" marker-end="url(#arr)"/>
+    <line x1="110" y1="278" x2="110" y2="284" stroke="#888780" stroke-width="1.5" marker-end="url(#arr)"/>
+    <line x1="110" y1="338" x2="110" y2="344" stroke="#888780" stroke-width="1.5" marker-end="url(#arr)"/>
+    <path d="M210,134 L228,134 L228,196 L252,196" fill="none" stroke="#7F77DD" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arrP)"/>
+    <path d="M210,254 L252,254" fill="none" stroke="#378ADD" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arrB)"/>
+    <path d="M210,314 L252,314" fill="none" stroke="#D85A30" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arrC)"/>
+    <rect x="240" y="96" width="424" height="258" rx="12" fill="none" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="6 3"/>
+    <text class="th" x="256" y="115" dominant-baseline="central" fill="#2C2C2A">VelociFI</text>
+    <g class="platform-box" data-vc="find" tabindex="0" role="button" aria-label="VelociFI Find. Territory Insights. Search, filter, qualify dealers."><rect x="252" y="124" width="400" height="44" rx="6" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/><text class="th" x="452" y="142" text-anchor="middle" dominant-baseline="central" fill="#0C447C">Find &mdash; Territory Insights</text><text class="ts" x="452" y="158" text-anchor="middle" dominant-baseline="central" fill="#185FA5">Search, filter, qualify dealers by territory and product</text></g>
+    <g class="platform-box" data-vc="pitch" tabindex="0" role="button" aria-label="VelociFI Pitch. Rate Presentation."><rect x="252" y="174" width="400" height="44" rx="6" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/><text class="th" x="452" y="192" text-anchor="middle" dominant-baseline="central" fill="#3C3489">Pitch &mdash; Rate Presentation</text><text class="ts" x="452" y="208" text-anchor="middle" dominant-baseline="central" fill="#534AB7">Pull rates from Admin, build a tailored dealer presentation</text></g>
+    <g class="platform-box" data-vc="grow" tabindex="0" role="button" aria-label="VelociFI Grow. CRM. Pipeline, tasks, routes, notes, and reporting."><rect x="252" y="224" width="400" height="44" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/><text class="th" x="452" y="242" text-anchor="middle" dominant-baseline="central" fill="#085041">Grow &mdash; CRM</text><text class="ts" x="452" y="258" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Pipeline, tasks, routes, notes, and reporting</text></g>
+    <line x1="252" y1="274" x2="652" y2="274" stroke="#D3D1C7" stroke-width="0.5" stroke-dasharray="3 2"/>
+    <text class="th" x="256" y="289" dominant-baseline="central" fill="#2C2C2A">AmpliFI</text>
+    <g class="platform-box" data-vc="amplifi" tabindex="0" role="button" aria-label="AmpliFI. F and I Menu, E-Contracting, and Rating."><rect x="252" y="298" width="400" height="44" rx="6" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/><text class="th" x="452" y="316" text-anchor="middle" dominant-baseline="central" fill="#712B13">F&amp;I Menu + E-Contracting + Rating</text><text class="ts" x="452" y="332" text-anchor="middle" dominant-baseline="central" fill="#993C1D">F&amp;I manager presents products and captures signatures digitally</text></g>
+    <text class="ts" x="10" y="430" dominant-baseline="central" fill="#B4B2A9">Contracts and premiums flow back up the chain. Admin pays commissions; agency pays agent.</text>
+    </svg>
+    <div class="legend" aria-hidden="true">
+      <div class="legend-item"><div class="legend-dot" style="background:#534AB7"></div>Admin / Pitch</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#185FA5"></div>Agent / Find</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#0F6E56"></div>Agency / Grow</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#993C1D"></div>Dealer / AmpliFI</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#3B6D11"></div>Consumer</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#888780"></div>Insurance Co.</div>
+    </div>
+    <div class="vc-footer">Color coding is intentional. Admin is purple and so is Pitch &mdash; Pitch pulls rates directly from Admin. Agent is blue and so is Find &mdash; the agent is the primary Territory Insights user. Dealer is coral and so is AmpliFI &mdash; the dealer is the activation endpoint.</div>
+  </div>
+  <div class="fi-extras-label">Industry Reference</div>
+  <div class="fi-section">
+    <div class="fi-section-hdr"><h3>Backend Products</h3><p>The most common and popular F&amp;I products sold in the F&amp;I office. Know these before your first customer call.</p></div>
+    <table><thead><tr><th>Product</th><th>What It Covers</th></tr></thead><tbody>
+      <tr><td>VSC (Vehicle Service Contract)</td><td>Covers repair costs after the manufacturer warranty expires. The most common and highest-value product. Not a warranty &mdash; it is a contract.</td></tr>
+      <tr><td>GAP Coverage</td><td>Covers the difference between the vehicle&#39;s market value and the remaining loan balance if the car is totaled or stolen.</td></tr>
+      <tr><td>Tire &amp; Wheel</td><td>Covers repair or replacement of tires and wheels damaged by road hazards &mdash; potholes, nails, curbs.</td></tr>
+      <tr><td>PDR (Paintless Dent Repair)</td><td>Covers minor dents and dings without requiring a full repaint.</td></tr>
+      <tr><td>Appearance Protection</td><td>Covers interior stains and exterior paint imperfections.</td></tr>
+      <tr><td>Key Replacement</td><td>Covers lost or damaged key fobs.</td></tr>
+      <tr><td>Windshield Protection</td><td>Covers chip or crack repair and in some cases full windshield replacement.</td></tr>
+      <tr><td>Battery Replacement</td><td>Covers battery failure &mdash; increasingly relevant as vehicles rely more on electronics.</td></tr>
+    </tbody></table>
+  </div>
+  <div class="fi-section">
+    <div class="fi-section-hdr"><h3>Vocabulary Cheat Sheet</h3><p>Terms you will hear constantly. Know these before your first customer call.</p></div>
+    <table><thead><tr><th>Term</th><th>What It Means</th></tr></thead><tbody>
+      <tr><td>VSC</td><td>Vehicle Service Contract &mdash; extended coverage. Not a warranty.</td></tr>
+      <tr><td>GAP</td><td>Guaranteed Asset Protection &mdash; covers the loan gap if vehicle is a total loss.</td></tr>
+      <tr><td>Admin / TPA</td><td>Creates, prices, and administers F&amp;I products. Processes claims.</td></tr>
+      <tr><td>F&amp;I Manager</td><td>Person at the dealership who presents and sells backend products to the buyer.</td></tr>
+      <tr><td>F&amp;I Agent</td><td>Field rep who places Admin products into dealerships. Primary VelociFI user.</td></tr>
+      <tr><td>Agency</td><td>Distributor &mdash; employs or contracts agents, manages Admin relationships.</td></tr>
+      <tr><td>Reserve</td><td>Margin a dealership earns on each F&amp;I product sold above cost.</td></tr>
+      <tr><td>Penetration</td><td>Percentage of vehicle sales that include at least one F&amp;I product.</td></tr>
+      <tr><td>Book of Business</td><td>An agent&#39;s portfolio of active dealer accounts.</td></tr>
+      <tr><td>Rate Presentation</td><td>Product and pricing proposal built with the Rating feature &mdash; pulled from Admin live.</td></tr>
+      <tr><td>Territory</td><td>Geographic area an agent is responsible for prospecting and managing.</td></tr>
+      <tr><td>AmpliFI</td><td>Carketa&#39;s digital F&amp;I menu, e-contracting, and rating platform used at the dealership.</td></tr>
+    </tbody></table>
+  </div>
+  <div class="role-block">
+    <h3>What This Means for Your Role</h3>
+    <p>You are not a product expert. You are a Customer Success Manager. Your job is to make sure agents and agency principals on your portfolio are actually using VelociFI &mdash; logging in, running territory searches, pulling rate presentations, and managing their book of business.</p>
+    <p>Understanding the value chain tells you where the pain is. An agent who cannot pull rates is losing deals. An agent not tracking territory is flying blind. Your conversations should be diagnostic &mdash; understanding where they are in the cycle and removing whatever is in the way.</p>
+    <p>For engaged accounts, help them get AmpliFI installed at active dealerships. An agent with AmpliFI at multiple stores is embedded in those stores in a way that creates strong retention on both sides.</p>
+  </div>
+</div>
+
+<!-- TAB 2: THE PRODUCT -->
+<div class="tab-pane" id="tab-product" role="tabpanel" aria-labelledby="tabbtn-product">
+  <div class="pane-header">
+    <h2>The Product &mdash; VelociFI Platform Guide</h2>
+    <p>What it does, how it works, and how to explain it. Click any section to expand.</p>
+  </div>
+  <div class="prod-search-wrap">
+    <input type="search" id="prod-search" placeholder="Search the product guide &mdash; e.g. rating, pipeline, mobile" aria-label="Search the product guide" />
+    <button class="prod-search-clear" id="prod-clear" aria-label="Clear search">&#x2715;</button>
+  </div>
+  <div class="search-results" id="prod-results" style="display:none" aria-live="polite"></div>
+  <div class="prod-jump">
+    <a href="#acc-overview" data-jump="acc-overview">1. Overview</a><a href="#acc-pricing" data-jump="acc-pricing">2. Pricing</a>
+    <a href="#acc-find" data-jump="acc-find">3. Find</a><a href="#acc-profile" data-jump="acc-profile">4. Dealer Profile</a>
+    <a href="#acc-market" data-jump="acc-market">5. Market Insights</a><a href="#acc-rating" data-jump="acc-rating">6. Rating</a>
+    <a href="#acc-manage" data-jump="acc-manage">7. Grow / Manage</a><a href="#acc-map" data-jump="acc-map">8. Map &amp; Routes</a>
+    <a href="#acc-team" data-jump="acc-team">9. Team</a><a href="#acc-amplifi" data-jump="acc-amplifi">10. AmpliFI</a>
+    <a href="#acc-settings" data-jump="acc-settings">11. Settings</a><a href="#acc-workflow" data-jump="acc-workflow">12. Full Workflow</a>
+    <a href="#acc-saydont" data-jump="acc-saydont">13. Say / Don&#39;t Say</a><a href="#acc-faq" data-jump="acc-faq">14. FAQ</a>
+    <a href="#acc-issues" data-jump="acc-issues">15. Common Issues</a>
+  </div>
+  <div class="accordion">
+
+    <div class="acc-item open" id="acc-overview">
+      <button class="acc-header" aria-expanded="true" aria-controls="acc-overview-body"><span class="acc-num" aria-hidden="true">1</span><span class="acc-title">Platform Overview</span><span class="acc-sub">Find / Pitch / Grow &middot; 7 nav sections</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="acc-overview-body">
+        <p class="body-text">VelociFI is a dealer intelligence and prospecting platform built for F&amp;I agents at <strong>velocifi.carketa.app</strong>. Available via web and mobile. The left sidebar is primary navigation across three stages.</p>
+        <div class="sub-head">Three Stages</div>
+        <table class="info-table"><thead><tr><th>Stage</th><th>What It Covers</th></tr></thead><tbody>
+          <tr><td>Find</td><td>Identify the right dealers before you walk in the door. Territory Insights lives here.</td></tr>
+          <tr><td>Pitch</td><td>Pull rates from Admins and build a dealer presentation. The Rating feature lives here.</td></tr>
+          <tr><td>Grow</td><td>Log activity, move dealers through the pipeline, manage your book. Manage lives here.</td></tr>
+        </tbody></table>
+        <div class="sub-head">Left Sidebar Navigation</div>
+        <table class="info-table"><thead><tr><th>Section</th><th>What It Is</th></tr></thead><tbody>
+          <tr><td>Search</td><td>Territory Insights &mdash; core prospecting screen. Starting point for every new territory.</td></tr>
+          <tr><td>Market</td><td>Market Insights &mdash; regional market data and competitor benchmarks.</td></tr>
+          <tr><td>Manage</td><td>CRM hub &mdash; dealer portfolio management, pipeline, tasks, notes, routes, reports.</td></tr>
+          <tr><td>Products</td><td>F&amp;I product catalog &mdash; eligibility rules that power criteria matching in Territory Insights.</td></tr>
+          <tr><td>Team</td><td>Team performance management &mdash; activity leaderboards, agent detail views, team-wide pipeline.</td></tr>
+          <tr><td>AmpliFI</td><td>Digital F&amp;I menu, e-contracting, and rating platform. Activated for AmpliFI Preferred Partners only.</td></tr>
+          <tr><td>Settings</td><td>Account configuration &mdash; custom statuses, user management, dealer fields, product management.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="acc-item" id="acc-pricing">
+      <button class="acc-header" aria-expanded="false" aria-controls="acc-pricing-body"><span class="acc-num" aria-hidden="true">2</span><span class="acc-title">Pricing &amp; Plans</span><span class="acc-sub">Seat types &middot; Territory license tiers</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="acc-pricing-body">
+        <div class="sub-head">Seat Types</div>
+        <table class="info-table"><thead><tr><th>Seat</th><th>Price</th><th>Access</th></tr></thead><tbody>
+          <tr><td>Field User</td><td><strong>$100/mo</strong></td><td>Core prospecting and CRM tools. For agents working a territory.</td></tr>
+          <tr><td>Owner User</td><td><strong>$200/mo</strong></td><td>Full access including team management, reporting, and settings. For agency principals and managers.</td></tr>
+        </tbody></table>
+        <div class="csm-note">Every account requires at least one Owner User. The Owner is the account administrator responsible for managing the team, settings, and product catalog.</div>
+        <div class="sub-head">Territory License Tiers (per account, shared by all users)</div>
+        <table class="info-table"><thead><tr><th>Coverage</th><th>Price/Mo</th></tr></thead><tbody>
+          <tr><td>1 State</td><td>$300</td></tr>
+          <tr><td>2&ndash;5 States</td><td>$400</td></tr>
+          <tr><td>6&ndash;10 States</td><td>$600</td></tr>
+          <tr><td>11&ndash;25 States</td><td>$800</td></tr>
+          <tr><td>26&ndash;50 States</td><td>$1,000</td></tr>
+        </tbody></table>
+        <div class="csm-note"><strong>CSM note:</strong> Your job is not to quote pricing. What you need is the structure &mdash; so you can flag expansion signals. An agent expanding into new states is an upgrade conversation. A growing team adding agents is a seat expansion conversation.</div>
+      </div>
+    </div>
+
+    <div class="acc-item" id="acc-find">
+      <button class="acc-header" aria-expanded="false" aria-controls="acc-find-body"><span class="acc-num" aria-hidden="true">3</span><span class="acc-title">Find &mdash; Territory Insights</span><span class="acc-sub">Search &middot; Criteria &middot; Filters &middot; Results</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="acc-find-body">
+        <p class="body-text">Territory Insights is the starting point for every prospecting session. Three tabs: <strong>Search</strong>, <strong>Dealer Lookup</strong>, and <strong>Other Dealerships</strong>.</p>
+        <div class="sub-head">Two Search Modes</div>
+        <ul class="bullet-list"><li><strong>Radius</strong> &mdash; Enter a city or zip code and a mile radius, then click Search.</li><li><strong>State</strong> &mdash; Toggle to search by entire state.</li></ul>
+        <div class="sub-head">Right Panel &mdash; Criteria Tab</div>
+        <table class="info-table"><thead><tr><th>Filter</th><th>What It Does</th></tr></thead><tbody>
+          <tr><td>Vehicle Age</td><td>Maximum vehicle age to include.</td></tr>
+          <tr><td>Mileage</td><td>Min and max range. Set to match your product eligibility.</td></tr>
+          <tr><td>Price</td><td>Average price minimum. Use to exclude buy-here-pay-here stores.</td></tr>
+          <tr><td>Body Types</td><td>SUV, truck, sedan, and others.</td></tr>
+          <tr><td>Fuel Types</td><td>Gas, hybrid, EV, diesel. Useful if you carry an EV product.</td></tr>
+          <tr><td>Makes / Models / Trims</td><td>Granular targeting if needed.</td></tr>
+        </tbody></table>
+        <div class="sub-head">Right Panel &mdash; Filter Tab</div>
+        <table class="info-table"><thead><tr><th>Filter</th><th>What It Does</th></tr></thead><tbody>
+          <tr><td>Cars on Lot</td><td>Minimum inventory size.</td></tr>
+          <tr><td>Vehicles Sold / Month</td><td>Minimum monthly sales.</td></tr>
+          <tr><td>Dealer Type</td><td>Independent, Franchise, or both.</td></tr>
+          <tr><td>Dealer Groups</td><td>Include or exclude multi-location groups. Most agents filter to Not in Groups to focus on independent owner-operators.</td></tr>
+        </tbody></table>
+        <div class="csm-note"><strong>Common starting setup:</strong> Independent + Not in Groups + min 10 sold/month + min 21 cars on lot. Cuts 150&ndash;200 dealers down to 30&ndash;50 high-quality targets.</div>
+        <div class="sub-head">Results List &mdash; Key Columns</div>
+        <table class="info-table"><thead><tr><th>Column</th><th>What It Shows</th></tr></thead><tbody>
+          <tr><td>INV %</td><td>Percentage of current inventory matching selected criteria.</td></tr>
+          <tr><td>SOLD %</td><td>Percentage of recently sold inventory that matched criteria.</td></tr>
+          <tr><td>Status</td><td>Pipeline stage badge. Color-coded and fully customizable.</td></tr>
+        </tbody></table>
+        <div class="csm-note"><strong>Reading together:</strong> High SOLD % with low INV % means opportunity &mdash; they sell the right cars but aren&#39;t using your product on those deals.</div>
+      </div>
+    </div>
+
+    <div class="acc-item" id="acc-profile">
+      <button class="acc-header" aria-expanded="false" aria-controls="acc-profile-body"><span class="acc-num" aria-hidden="true">4</span><span class="acc-title">Dealer Profile</span><span class="acc-sub">Profile &middot; Inventory &middot; Activity tabs</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="acc-profile-body">
+        <p class="body-text">Clicking any dealer name opens their full profile &mdash; everything an agent needs before walking in the door.</p>
+        <div class="sub-head">Header Action Buttons</div>
+        <table class="info-table"><thead><tr><th>Button</th><th>What It Does</th></tr></thead><tbody>
+          <tr><td>STATUS</td><td>Set the dealer&#39;s pipeline stage.</td></tr>
+          <tr><td>+ ASSIGN</td><td>Assign the dealer to a team member.</td></tr>
+          <tr><td>RATES</td><td>Open the Rating feature for this dealer.</td></tr>
+          <tr><td>LISTS</td><td>Add the dealer to a custom list.</td></tr>
+          <tr><td>ROUTES</td><td>Add the dealer to an existing or new route.</td></tr>
+          <tr><td>SHARE</td><td>Copy a shareable link to this dealer&#39;s profile.</td></tr>
+        </tbody></table>
+        <div class="sub-head">Profile Tab &mdash; Key Data</div>
+        <ul class="bullet-list">
+          <li>Four KPI tiles: Total Inventory, Avg. Price, Avg. Days on Lot, 30-Day Turnover Rate.</li>
+          <li>Google Rating, review count, years in business, five recent review snippets.</li>
+          <li>Total Inventory Sold chart with Sales Forecast projection for the current month.</li>
+          <li>Mileage Distribution and Pricing Distribution &mdash; inventory bucketed by range.</li>
+        </ul>
+        <div class="sub-head">Activity Tab</div>
+        <ul class="bullet-list">
+          <li><strong>About this Dealership</strong> &mdash; Custom fields on every dealer profile.</li>
+          <li><strong>Tasks</strong> &mdash; Create and view follow-up tasks tied to this dealer.</li>
+          <li><strong>Notes</strong> &mdash; Log visit and call notes. Full history in chronological order.</li>
+          <li><strong>Files</strong> &mdash; Upload and store documents for this dealer.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="acc-item" id="acc-market">
+      <button class="acc-header" aria-expanded="false" aria-controls="acc-market-body"><span class="acc-num" aria-hidden="true">5</span><span class="acc-title">Market Insights</span><span class="acc-sub">Regional trends &middot; 4 tabs</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="acc-market-body">
+        <p class="body-text">Gives agents a macro-level view of the automotive market in their region. Use it to back up sales conversations with data. Set region by zip code and radius. Export as PDF.</p>
+        <table class="info-table"><thead><tr><th>Tab</th><th>What It Shows</th></tr></thead><tbody>
+          <tr><td>Regional Trends</td><td>90-day charts: inventory levels, avg. days on lot, sold inventory, avg. list price.</td></tr>
+          <tr><td>Inventory Levels</td><td>Current Low Supply and Current High Supply models in the region.</td></tr>
+          <tr><td>Sales by Model</td><td>Highest-selling models and Lowest Days on Lot models in the past 90 days.</td></tr>
+          <tr><td>Dealer Performance</td><td>Most Active Dealers and Lowest Days on Lot dealers in the region.</td></tr>
+        </tbody></table>
+        <div class="csm-note">Walk into a dealer meeting knowing what&#39;s happening in their market. If a specific model is the fastest-selling vehicle in the region and they have 30 on the lot, that is a conversation starter and it shows you did your homework.</div>
+      </div>
+    </div>
+
+    <div class="acc-item" id="acc-rating">
+      <button class="acc-header" aria-expanded="false" aria-controls="acc-rating-body"><span class="acc-num" aria-hidden="true">6</span><span class="acc-title">Pitch &mdash; The Rating Feature</span><span class="acc-sub">6-step workflow &middot; PDF presentation</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="acc-rating-body">
+        <p class="body-text">Pull rates from one or more Admins simultaneously and build a dealer presentation based on that dealer&#39;s actual inventory &mdash; without leaving VelociFI.</p>
+        <ul class="step-list">
+          <li class="step-item"><span class="step-num" aria-hidden="true">1</span><div class="step-content"><strong>Open Rates</strong> &mdash; From the dealer&#39;s profile, click the RATES button in the header.</div></li>
+          <li class="step-item"><span class="step-num" aria-hidden="true">2</span><div class="step-content"><strong>Select Admin(s)</strong> &mdash; Choose which Admins to pull rates from. VelociFI can pull from multiple Admins at once.</div></li>
+          <li class="step-item"><span class="step-num" aria-hidden="true">3</span><div class="step-content"><strong>Select Vehicles</strong> &mdash; VelociFI loads the dealer&#39;s current and recently sold inventory. Select 3&ndash;5 representative vehicles. No manual VIN entry.</div></li>
+          <li class="step-item"><span class="step-num" aria-hidden="true">4</span><div class="step-content"><strong>Rates Are Returned</strong> &mdash; VelociFI sends VINs and mileage to the selected Admins and retrieves available products.</div></li>
+          <li class="step-item"><span class="step-num" aria-hidden="true">5</span><div class="step-content"><strong>Filter Results</strong> &mdash; Narrow results. Example: show only 24 and 36 month terms with a $100 deductible.</div></li>
+          <li class="step-item"><span class="step-num" aria-hidden="true">6</span><div class="step-content"><strong>Download the Presentation</strong> &mdash; Click Download &rarr; Create PDF. Choose products and columns to display. Click Download.</div></li>
+        </ul>
+        <div class="csm-note">Walk in with a presentation built on that dealer&#39;s specific inventory. They see rates for cars they actually have on the lot &mdash; not a generic menu. This is what separates a prepared VelociFI agent.</div>
+      </div>
+    </div>
+
+    <div class="acc-item" id="acc-manage">
+      <button class="acc-header" aria-expanded="false" aria-controls="acc-manage-body"><span class="acc-num" aria-hidden="true">7</span><span class="acc-title">Grow &mdash; Manage (CRM)</span><span class="acc-sub">7 tabs &middot; Pipeline stages &middot; Tasks &middot; Routes</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="acc-manage-body">
+        <p class="body-text">Manage is the CRM hub. Once a dealer is in an agent&#39;s book, Manage is where all ongoing relationship activity lives. Seven tabs.</p>
+        <ul class="bullet-list">
+          <li><strong>My Dealerships</strong> &mdash; Master list of all assigned dealers. Sortable and filterable by status.</li>
+          <li><strong>Pipeline</strong> &mdash; Kanban board view. Dealers organized by pipeline stage.</li>
+          <li><strong>Tasks</strong> &mdash; Aggregated to-do list across all dealers. Overdue tasks in red. Use as a daily work queue.</li>
+          <li><strong>Notes</strong> &mdash; Aggregated notes log across all dealers.</li>
+          <li><strong>Lists</strong> &mdash; Status Lists and Custom Lists. Exportable to CSV.</li>
+          <li><strong>Routes</strong> &mdash; All saved driving routes. Reusable.</li>
+          <li><strong>Report</strong> &mdash; Activity reporting dashboard. 23 trackable columns. Exportable.</li>
+        </ul>
+        <div class="sub-head">Pipeline Stage Sequence</div>
+        <table class="info-table"><thead><tr><th>Stage</th><th>Meaning</th></tr></thead><tbody>
+          <tr><td>Qualified</td><td>Identified as a worthwhile target.</td></tr>
+          <tr><td>Target Dealer</td><td>Confirmed priority &mdash; worth pursuing now.</td></tr>
+          <tr><td>Outreach Initiated</td><td>First contact made.</td></tr>
+          <tr><td>Value Review</td><td>Dealer is evaluating the product offering.</td></tr>
+          <tr><td>Meeting Held</td><td>In-person or virtual meeting completed.</td></tr>
+          <tr><td>Proposal Provided</td><td>Rates or formal proposal delivered.</td></tr>
+          <tr><td>Needs Follow-Up</td><td>Waiting on the dealer to respond.</td></tr>
+          <tr><td>Closed Won</td><td>Deal agreed. Products placed.</td></tr>
+          <tr><td>Installed</td><td>Products placed and active at the dealership.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="acc-item" id="acc-map">
+      <button class="acc-header" aria-expanded="false" aria-controls="acc-map-body"><span class="acc-num" aria-hidden="true">8</span><span class="acc-title">Map &amp; Routing</span><span class="acc-sub">Build &middot; Optimize &middot; Navigate</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="acc-map-body">
+        <p class="body-text">From Territory Insights, click <strong>View on Map</strong>. All filtered dealers appear as pins. Select dealers, click <strong>Create Route</strong>.</p>
+        <table class="info-table"><thead><tr><th>Setting</th><th>Notes</th></tr></thead><tbody>
+          <tr><td>Route name</td><td>Rename to something useful &mdash; McAllen Tuesday, Brownsville West Route, etc.</td></tr>
+          <tr><td>Starting point</td><td>Click the location icon for current location, or type an address.</td></tr>
+          <tr><td>Departure time</td><td>Leave now or set a specific date and time.</td></tr>
+          <tr><td>Visit buffer</td><td>Default is 30 minutes between stops. Adjust based on typical visit length.</td></tr>
+        </tbody></table>
+        <p class="body-text">Route is optimized and saved automatically. Click <strong>Begin Navigation</strong> &mdash; VelociFI sends the first dealer&#39;s address to Google Maps. After each visit, mark complete, log a note, click <strong>Continue Navigation</strong>.</p>
+        <div class="csm-note">VelociFI has a mobile app (listed as &ldquo;Carketa&rdquo; on iOS and Android). Same login as desktop. Everything syncs in real time. Most agents do day-to-day field activity from mobile.</div>
+      </div>
+    </div>
+
+    <div class="acc-item" id="acc-team">
+      <button class="acc-header" aria-expanded="false" aria-controls="acc-team-body"><span class="acc-num" aria-hidden="true">9</span><span class="acc-title">Team</span><span class="acc-sub">Activity leaderboard &middot; Agent details &middot; Team pipeline</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="acc-team-body">
+        <p class="body-text">Used by agency principals to monitor team activity and performance. Three tabs.</p>
+        <table class="info-table"><thead><tr><th>Tab</th><th>What It Shows</th></tr></thead><tbody>
+          <tr><td>Team Members</td><td>Leaderboard-style activity table. Columns: Name, Total Assigned, Calls, Visits, Check-Ins, Tasks Created/Completed, Routes Created/Completed. Exportable.</td></tr>
+          <tr><td>Agent Details</td><td>Drill into a specific agent&#39;s full dealer portfolio. Select agent from dropdown.</td></tr>
+          <tr><td>Pipeline Kanban</td><td>Team-wide kanban board. All agents&#39; dealers across all stages. Filter by agent or search by dealer name.</td></tr>
+        </tbody></table>
+        <div class="csm-note"><strong>CSM use:</strong> If an agent has not logged visits or notes in two weeks, it shows here immediately. First place to look in a health conversation with the agency principal.</div>
+      </div>
+    </div>
+
+    <div class="acc-item" id="acc-amplifi">
+      <button class="acc-header" aria-expanded="false" aria-controls="acc-amplifi-body"><span class="acc-num" aria-hidden="true">10</span><span class="acc-title">AmpliFI in VelociFI</span><span class="acc-sub">Preferred Partners only &middot; Retention signal</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="acc-amplifi-body">
+        <p class="body-text">AmpliFI is a digital F&amp;I menu, e-contracting, and rating platform used inside the dealership &mdash; at no cost to the dealer. Accessible in VelociFI for AmpliFI Preferred Partners only.</p>
+        <table class="info-table"><thead><tr><th>Tab</th><th>What It Does</th></tr></thead><tbody>
+          <tr><td>My Dealerships</td><td>Dealers the agent has activated on AmpliFI. Shows dealer name, owner contact, created date, users, TPA connections.</td></tr>
+          <tr><td>Analytics</td><td>Production data per activated dealer. Deal volume, product mix, penetration rates, performance trends.</td></tr>
+          <tr><td>Submit Dealership</td><td>Pipeline of dealer activation submissions. Use + Add Dealership to submit a new dealer.</td></tr>
+        </tbody></table>
+        <div class="csm-note"><strong>CSM retention signal:</strong> An agent with multiple AmpliFI-activated dealerships is deeply embedded in those stores. The dealer depends on the tool, creating strong churn resistance on both sides.</div>
+      </div>
+    </div>
+
+    <div class="acc-item" id="acc-settings">
+      <button class="acc-header" aria-expanded="false" aria-controls="acc-settings-body"><span class="acc-num" aria-hidden="true">11</span><span class="acc-title">Settings</span><span class="acc-sub">Statuses &middot; Custom fields &middot; User management</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="acc-settings-body">
+        <ul class="bullet-list">
+          <li><strong>Statuses</strong> &mdash; Customize pipeline stages. Each has a name and color. Drag to reorder.</li>
+          <li><strong>Fields</strong> &mdash; Custom data fields on every dealer profile under &ldquo;About this Dealership.&rdquo;</li>
+          <li><strong>Account Products</strong> &mdash; Manage product catalog with eligibility rules: mileage range, model year range, price range. These feed Territory Insights criteria matching.</li>
+          <li><strong>User Management</strong> &mdash; Add, manage, and deactivate team member accounts. Shows name, email, states, status, and role (User / Owner).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="acc-item" id="acc-workflow">
+      <button class="acc-header" aria-expanded="false" aria-controls="acc-workflow-body"><span class="acc-num" aria-hidden="true">12</span><span class="acc-title">Full Sales Workflow</span><span class="acc-sub">10-step end-to-end reference</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="acc-workflow-body">
+        <table class="info-table"><thead><tr><th>Step</th><th>Action</th></tr></thead><tbody>
+          <tr><td>1. Find your territory</td><td>Territory Insights &rarr; Search. Set radius, configure Criteria, set Filters. Run the search.</td></tr>
+          <tr><td>2. Qualify the list</td><td>Review ranked dealers. Focus on high INV % first. High SOLD % with low INV % is also an opportunity.</td></tr>
+          <tr><td>3. Assign and set status</td><td>Assign yourself to the dealer. Set status to Target Dealer or Outreach Initiated.</td></tr>
+          <tr><td>4. Log every touchpoint</td><td>Every call and visit goes in Activity &rarr; Notes. Set follow-up Tasks.</td></tr>
+          <tr><td>5. Build your route</td><td>Select target dealers on the map, create an optimized route, save it.</td></tr>
+          <tr><td>6. Prepare for the meeting</td><td>Open the dealer profile, click RATES. Select Admin(s), pick vehicles, filter results, download the PDF.</td></tr>
+          <tr><td>7. After the meeting</td><td>Log the visit in Activity. Update the dealer&#39;s Status. Set a follow-up Task.</td></tr>
+          <tr><td>8. Move through the pipeline</td><td>Advance the dealer through the Pipeline Kanban as the relationship progresses.</td></tr>
+          <tr><td>9. Close and activate AmpliFI</td><td>Once the dealer agrees, move to Closed Won. If you are an AmpliFI Preferred Partner, submit the dealer for AmpliFI activation.</td></tr>
+          <tr><td>10. Monitor production</td><td>Check in regularly after close. A dealer that goes quiet needs a re-engagement call.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="acc-item" id="acc-saydont">
+      <button class="acc-header" aria-expanded="false" aria-controls="acc-saydont-body"><span class="acc-num" aria-hidden="true">13</span><span class="acc-title">What to Say &mdash; and What Not to Say</span><span class="acc-sub">Safe topics &middot; Areas to avoid</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="acc-saydont-body">
+        <div class="csm-note"><strong>Product accuracy is the most important thing to get right on customer calls.</strong> When in doubt, do not say it. Confirm first and follow up. Never guess on a product detail.</div>
+        <div class="sub-head">Confirmed &mdash; Safe to Discuss</div>
+        <table class="info-table"><thead><tr><th>Feature</th><th>What You Can Say</th></tr></thead><tbody>
+          <tr><td>Territory Insights</td><td>Radius and state search, criteria filters, dealer filters, results list with INV % and SOLD %.</td></tr>
+          <tr><td>Dealer profile</td><td>All data fields: inventory, sales, Google reviews, % to market, mileage/pricing distribution.</td></tr>
+          <tr><td>Rating feature</td><td>Multi-Admin rate pull, filtering results, downloading a PDF presentation.</td></tr>
+          <tr><td>Market Insights</td><td>Regional trends, inventory levels, sales by model, dealer performance.</td></tr>
+          <tr><td>Manage / CRM</td><td>My Dealerships, Pipeline Kanban, Tasks, Notes, Lists, Routes, Report.</td></tr>
+          <tr><td>Mobile app</td><td>Exists, syncs with desktop, same login. Listed as &ldquo;Carketa&rdquo; on iOS and Android.</td></tr>
+          <tr><td>Data refresh</td><td>Inventory data updates every 24 hours.</td></tr>
+        </tbody></table>
+        <div class="sub-head">Do Not Mention</div>
+        <table class="info-table"><thead><tr><th>Area</th><th>Why</th></tr></thead><tbody>
+          <tr><td>Rating enhancements</td><td>Do not describe improvements beyond what is in this document.</td></tr>
+          <tr><td>Roadmap items</td><td>Never share what is being built. Only discuss what is live today.</td></tr>
+          <tr><td>Integration specifics</td><td>Do not promise a specific Admin connection without confirming it is live for that customer.</td></tr>
+          <tr><td>AmpliFI specifics</td><td>For questions about AmpliFI features, pricing, or dealer setup, confirm details before answering.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="acc-item" id="acc-faq">
+      <button class="acc-header" aria-expanded="false" aria-controls="acc-faq-body"><span class="acc-num" aria-hidden="true">14</span><span class="acc-title">Common Questions from Agents</span><span class="acc-sub">14 Q&amp;As</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="acc-faq-body">
+        <table class="info-table"><thead><tr><th>Question</th><th>Answer</th></tr></thead><tbody>
+          <tr><td>Why does a dealer show 250 cars but only 1 matches my criteria?</td><td>Their website is probably misconfigured &mdash; missing mileage data or stale inventory. This is a dealer website issue, not VelociFI. The store may still be worth visiting.</td></tr>
+          <tr><td>Why is a dealer I know not showing up?</td><td>Check if filtered out first. If genuinely missing, go to Dealer Lookup. If no results, a Submit New Dealer button appears.</td></tr>
+          <tr><td>Can I share my login with a teammate?</td><td>No. Logins are individual. Sharing credentials violates the Terms and Conditions.</td></tr>
+          <tr><td>Can I build custom pipeline stages?</td><td>Yes. Settings &rarr; Dealer Properties &rarr; Statuses.</td></tr>
+          <tr><td>How often does the data update?</td><td>Every 24 hours.</td></tr>
+          <tr><td>How do I create a dealer presentation?</td><td>Open the dealer profile, click RATES, select Admin(s), select vehicles, filter, download as PDF.</td></tr>
+          <tr><td>Can I use VelociFI on my phone?</td><td>Yes. Mobile app, same credentials as desktop. Syncs in real time.</td></tr>
+          <tr><td>What does % to Market mean?</td><td>Compares the dealer&#39;s listed prices to market comps for similar nearby vehicles. Under 100% is below market &mdash; good for VSC attachment.</td></tr>
+          <tr><td>What does high SOLD % with low INV % mean?</td><td>Opportunity. They sell the right cars but aren&#39;t using your product on those deals. That is the pitch.</td></tr>
+          <tr><td>Can I save routes and reuse them?</td><td>Yes. Every route is saved automatically in Manage &rarr; Routes.</td></tr>
+          <tr><td>How do I see my team&#39;s activity?</td><td>Team &rarr; Team Members tab. Filter by date range and agent.</td></tr>
+          <tr><td>What is the Pipeline Kanban for?</td><td>A visual snapshot of your entire book &mdash; where every dealer stands in your process. Review it at the start of each day.</td></tr>
+          <tr><td>How do I add a dealer not in the system?</td><td>Territory Insights &rarr; Dealer Lookup. If no results, a Submit New Dealer button appears.</td></tr>
+          <tr><td>What is the difference between SOLD % and INV %?</td><td>INV % is what they have on the lot right now that qualifies. SOLD % is what they were selling recently that qualified.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="acc-item" id="acc-issues">
+      <button class="acc-header" aria-expanded="false" aria-controls="acc-issues-body"><span class="acc-num" aria-hidden="true">15</span><span class="acc-title">Common Issues &amp; First Responses</span><span class="acc-sub">8 scenarios</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="acc-issues-body">
+        <div class="csm-note"><strong>For every submission:</strong> include the customer name, specific behavior observed, steps to reproduce, and customer impact. Submit via the Feature &amp; Bug Intake Form in ClickUp. Vague submissions slow everything down.</div>
+        <table class="info-table"><thead><tr><th>Issue</th><th>First Response</th></tr></thead><tbody>
+          <tr><td>User cannot log in</td><td>Verify the email address &mdash; typos in the username are the most common cause.</td></tr>
+          <tr><td>Dealer missing from the system</td><td>Check if filtered out by current criteria first. If genuinely missing, submit via the Intake Form with dealer name, address, and website URL.</td></tr>
+          <tr><td>Rate pull returning no products</td><td>Confirm the correct Admin(s) are selected and the Admin account is connected and active.</td></tr>
+          <tr><td>PDF presentation blank or incomplete</td><td>Confirm vehicles were added and rates returned before downloading. If issue persists, submit via the Intake Form with a screenshot.</td></tr>
+          <tr><td>Route not optimizing correctly</td><td>Confirm the starting point is set correctly. If still wrong, submit via the Intake Form.</td></tr>
+          <tr><td>Inventory data looks wrong</td><td>Confirm whether the issue is on the dealer&#39;s own website. If VelociFI data still differs after 24 hours, submit via the Intake Form.</td></tr>
+          <tr><td>Mobile app not syncing</td><td>Log out and back in on mobile. If issue persists, submit via the Intake Form.</td></tr>
+          <tr><td>Custom status or field not saving</td><td>Settings changes sometimes require a page refresh. Refresh and check again. If still not saving, submit via the Intake Form.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TAB 3: CSM PLAYBOOK -->
+<div class="tab-pane" id="tab-playbook" role="tabpanel" aria-labelledby="tabbtn-playbook">
+  <div class="pane-header">
+    <h2>The CSM Playbook</h2>
+    <p>How we actually work &mdash; the habits, workflows, and standards that make a great CSM at Carketa. Click any section to expand.</p>
+  </div>
+  <div class="role-block" style="margin-bottom:24px">
+    <h3>The Consultant Mindset</h3>
+    <p>Know the product in and out &mdash; every button, every feature, every screen. That mastery is the price of entry, not the job itself. You learn the product cold so the customer never has to.</p>
+    <p>The goal is never to teach the customer what each individual button does. The goal is to understand what <em>they</em> need and get them to value right away. Their needs lead every conversation; the features are just how you deliver on them.</p>
+    <p>We do not run checklists. A CSM who walks a customer through a list of features is a tour guide. A CSM who diagnoses where the customer is trying to go and uses the product to get them there is a consultant. Be the consultant.</p>
+  </div>
+  <div class="accordion">
+
+    <div class="acc-item open" id="pb-research">
+      <button class="acc-header" aria-expanded="true" aria-controls="pb-research-body"><span class="acc-num" aria-hidden="true">1</span><span class="acc-title">The Research Ritual &mdash; Before Any Customer Contact</span><span class="acc-sub">Gmail &middot; RingCentral &middot; Fireflies &middot; HubSpot</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="pb-research-body">
+        <p class="body-text">Never reach out to a customer cold. Before any call, email, or text, pull the full picture from every system. This takes ten minutes and it is the difference between a generic touchpoint and a conversation that moves the account forward.</p>
+        <ul class="step-list">
+          <li class="step-item"><span class="step-num" aria-hidden="true">1</span><div class="step-content"><strong>Gmail</strong> &mdash; Search the customer&#39;s name and domain. Read the recent threads, not just the last one.</div></li>
+          <li class="step-item"><span class="step-num" aria-hidden="true">2</span><div class="step-content"><strong>RingCentral texts</strong> &mdash; Texts arrive in Gmail as notifications. Search <code>from:service@ringcentral.com</code> plus the customer&#39;s phone number to pull the full text history.</div></li>
+          <li class="step-item"><span class="step-num" aria-hidden="true">3</span><div class="step-content"><strong>Fireflies</strong> &mdash; Search by company name or participant email. Read the summaries and action items from past calls. Were commitments made? Were they kept?</div></li>
+          <li class="step-item"><span class="step-num" aria-hidden="true">4</span><div class="step-content"><strong>HubSpot</strong> &mdash; Open the company page. Read the notes, check the ticket stage, and review logged activity.</div></li>
+        </ul>
+        <div class="csm-note"><strong>The test:</strong> if the customer mentioned something on your last call and you ask about it on this one, you build trust. If you ask a question they already answered, you lose it.</div>
+      </div>
+    </div>
+
+    <div class="acc-item" id="pb-postcall">
+      <button class="acc-header" aria-expanded="false" aria-controls="pb-postcall-body"><span class="acc-num" aria-hidden="true">2</span><span class="acc-title">The Post-Call Workflow &mdash; After Every Onboarding or Kickoff Call</span><span class="acc-sub">Recording &middot; Recap &middot; Log &middot; Stage</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="pb-postcall-body">
+        <p class="body-text">Every customer call gets closed out the same day with the same four steps. An undocumented call did not happen.</p>
+        <ul class="step-list">
+          <li class="step-item"><span class="step-num" aria-hidden="true">1</span><div class="step-content"><strong>Pull the Fireflies recording</strong> &mdash; Grab the summary and action items while the call is fresh.</div></li>
+          <li class="step-item"><span class="step-num" aria-hidden="true">2</span><div class="step-content"><strong>Send the recap email</strong> &mdash; Short recap to the customer: what was covered, what they committed to, what you committed to, and the next scheduled touchpoint.</div></li>
+          <li class="step-item"><span class="step-num" aria-hidden="true">3</span><div class="step-content"><strong>Log it in HubSpot</strong> &mdash; Log the call at the company page with structured notes: attendees, topics, action items, and next steps.</div></li>
+          <li class="step-item"><span class="step-num" aria-hidden="true">4</span><div class="step-content"><strong>Update the ticket stage</strong> &mdash; Move the customer&#39;s ticket in the VelociFI F&amp;I Pipeline to the correct stage. If the account&#39;s reality changed on this call, the stage changes the same day.</div></li>
+        </ul>
+        <div class="csm-note"><strong>Recaps are retention.</strong> A customer who receives a recap after every call knows they&#39;re being managed by a professional. It also creates a paper trail that protects everyone when &ldquo;you never told us that&rdquo; comes up.</div>
+      </div>
+    </div>
+
+    <div class="acc-item" id="pb-firstcall">
+      <button class="acc-header" aria-expanded="false" aria-controls="pb-firstcall-body"><span class="acc-num" aria-hidden="true">3</span><span class="acc-title">Your First Onboarding Call &mdash; Agenda</span><span class="acc-sub">30&ndash;45 min &middot; Customer does the clicking</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="pb-firstcall-body">
+        <p class="body-text">A standard first onboarding session runs 30&ndash;45 minutes. This agenda is a frame, not a script. Open by understanding what the customer needs, then let those needs decide where you spend the time. The goal is not to demo every feature &mdash; it&#39;s to get the customer to do the workflow that matters most to <em>them</em>, with their own hands, before the call ends.</p>
+        <ul class="step-list">
+          <li class="step-item"><span class="step-num" aria-hidden="true">1</span><div class="step-content"><strong>Intro and context (5 min)</strong> &mdash; Their agency, their territory, their Admins, what they want out of the platform.</div></li>
+          <li class="step-item"><span class="step-num" aria-hidden="true">2</span><div class="step-content"><strong>Territory Insights walkthrough</strong> &mdash; Run a real search in <em>their</em> territory with <em>their</em> criteria. Show them the INV % / SOLD % read.</div></li>
+          <li class="step-item"><span class="step-num" aria-hidden="true">3</span><div class="step-content"><strong>First rate pull (if applicable)</strong> &mdash; Open a real dealer from their results, click RATES, pull from their Admin, download the PDF.</div></li>
+          <li class="step-item"><span class="step-num" aria-hidden="true">4</span><div class="step-content"><strong>One route</strong> &mdash; Build one route from the map so they leave knowing how field days work.</div></li>
+          <li class="step-item"><span class="step-num" aria-hidden="true">5</span><div class="step-content"><strong>Mobile app</strong> &mdash; Make sure it&#39;s installed before the call ends. It&#39;s listed as &ldquo;Carketa&rdquo; on iOS and Android.</div></li>
+          <li class="step-item"><span class="step-num" aria-hidden="true">6</span><div class="step-content"><strong>Close with next steps</strong> &mdash; Set the next check-in date on the call. Never end without a scheduled next touchpoint.</div></li>
+        </ul>
+        <div class="csm-note"><strong>Success metric:</strong> the customer accomplished the thing <em>they</em> came for &mdash; with their own hands &mdash; and left knowing exactly how the platform serves their specific book. If you did all the clicking, or you covered every feature but never touched their actual need, the onboarding didn&#39;t land.</div>
+      </div>
+    </div>
+
+    <div class="acc-item" id="pb-health">
+      <button class="acc-header" aria-expanded="false" aria-controls="pb-health-body"><span class="acc-num" aria-hidden="true">4</span><span class="acc-title">Reading Account Health</span><span class="acc-sub">PostHog &middot; Team tab &middot; Early warnings</span><span class="acc-chevron" aria-hidden="true">&#9660;</span></button>
+      <div class="acc-body" id="pb-health-body">
+        <p class="body-text">A quiet account is an action item, not a relief. Usage data tells you an account is at risk weeks before the customer tells you.</p>
+        <table class="info-table"><thead><tr><th>Signal</th><th>Where to Look</th><th>What It Means</th></tr></thead><tbody>
+          <tr><td>Login recency</td><td>PostHog</td><td>More than ~2 weeks since last activity is a flag. More than 30 days is urgent.</td></tr>
+          <tr><td>Active days trending down</td><td>PostHog</td><td>The &ldquo;declining but still active&rdquo; pattern is the highest-value early warning. These accounts are saveable.</td></tr>
+          <tr><td>Agent activity gaps</td><td>Team tab in VelociFI</td><td>An agent with no logged visits or notes in two weeks shows here immediately. First thing to check before a health conversation with the principal.</td></tr>
+          <tr><td>No AmpliFI footprint</td><td>AmpliFI tab</td><td>Engaged accounts with zero activated dealerships have weaker retention roots. An expansion conversation, not a panic.</td></tr>
+        </tbody></table>
+        <div class="csm-note"><strong>Logins undercount real usage.</strong> Judge health on overall in-app activity, not just logins. PostHog is the source of truth; search the customer by email.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TAB 4: ONBOARDING & EXPANSION PLAYBOOK -->
+<div class="tab-pane" id="tab-lifecycle" role="tabpanel" aria-labelledby="tabbtn-lifecycle">
+  <div class="pane-header">
+    <h2>VelociFI Onboarding &amp; Expansion Playbook</h2>
+    <p>The account lifecycle from kickoff to expansion &mdash; phases, exit criteria, and the revenue motions built into every touchpoint.</p>
+  </div>
+
+  <div class="section-label" style="margin-top:0">Purpose</div>
+  <div class="pb-card">
+    <p>Onboarding is complete when the customer is getting enough value from VelociFI that introducing AmpliFI to their dealers, adding users, or expanding territory is a natural next step rather than a sales ask. Every account exits onboarding with three things answered: dealer outcome confirmed, AmpliFI conversation had, expansion signals assessed.</p>
+  </div>
+
+  <div class="section-label">The Three Phases</div>
+  <div class="phase-grid">
+
+    <div class="phase-card">
+      <div class="phase-stripe p1" aria-hidden="true"></div>
+      <div class="phase-head"><span class="phase-name">Phase 1: Setup Complete</span><span class="phase-target p1">Target: Day 7</span></div>
+      <div class="phase-body">
+        <div class="phase-label">Exit Criteria</div>
+        <ul class="exit-list">
+          <li><span class="exit-num" aria-hidden="true">1</span><span>Kickoff/training call completed (Fireflies record exists)</span></li>
+          <li><span class="exit-num" aria-hidden="true">2</span><span>Territory configured and confirmed correct with the customer</span></li>
+          <li><span class="exit-num" aria-hidden="true">3</span><span>Every licensed user has logged in at least once (verify in PostHog; the account-level license means dormant seats are invisible unless checked)</span></li>
+        </ul>
+        <div class="warn-note"><strong>Failure trigger:</strong> No training call completed by Day 14 &rarr; escalation outreach from CSM. Do not let the account sit quietly.</div>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-stripe p2" aria-hidden="true"></div>
+      <div class="phase-head"><span class="phase-name">Phase 2: Activated</span><span class="phase-target p2">Target: Day 30</span></div>
+      <div class="phase-body">
+        <div class="phase-label">Exit Criteria</div>
+        <ul class="exit-list">
+          <li><span class="exit-num" aria-hidden="true">1</span><span>Find: Customer has run dealer prospecting searches on their own, outside of training calls</span></li>
+          <li><span class="exit-num" aria-hidden="true">2</span><span>Pitch: Customer has generated pitch material or reports for at least 5 dealers</span></li>
+          <li><span class="exit-num" aria-hidden="true">3</span><span>Usage rhythm: 2 or more active days per week, sustained for two consecutive weeks</span></li>
+        </ul>
+        <div class="warn-note"><strong>Failure trigger:</strong> No self-driven usage by Day 30 &rarr; schedule a re-onboarding call, not a routine check-in. If still stalled at Day 45, move the ticket to Risk stage.</div>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-stripe p3" aria-hidden="true"></div>
+      <div class="phase-head"><span class="phase-name">Phase 3: Graduated</span><span class="phase-target p3">Target: Day 45 to 60</span></div>
+      <div class="phase-body">
+        <div class="phase-label">Exit Criteria</div>
+        <ul class="exit-list">
+          <li><span class="exit-num" aria-hidden="true">1</span><span>Usage is stable or growing week over week with no support dependency</span></li>
+          <li><span class="exit-num" aria-hidden="true">2</span><span>Dealer outcome confirmed. Ask directly on a check-in call: &ldquo;Has VelociFI gotten you in front of a dealer yet: meeting booked, pitch delivered, or contract signed?&rdquo; A yes is the real graduation signal. A customer logging in daily but with no dealer conversations landed is not ready for any expansion ask.</span></li>
+          <li><span class="exit-num" aria-hidden="true">3</span><span>AmpliFI conversation had (see below)</span></li>
+          <li><span class="exit-num" aria-hidden="true">4</span><span>Expansion signals assessed (see below)</span></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-label">The AmpliFI Bridge</div>
+  <div class="pb-card">
+    <p>Every graduation call includes the question: &ldquo;Which of your dealers would be a fit for AmpliFI?&rdquo; This is a standard part of the lifecycle, not an opportunistic upsell. Even a &ldquo;none yet&rdquo; answer is logged.</p>
+    <p>The funnel after graduation:</p>
+    <div class="funnel">
+      <span class="funnel-step">Graduated</span>
+      <span class="funnel-arrow" aria-hidden="true">&rarr;</span>
+      <span class="funnel-step">AmpliFI conversation had</span>
+      <span class="funnel-arrow" aria-hidden="true">&rarr;</span>
+      <span class="funnel-step">First dealer introduction made</span>
+      <span class="funnel-arrow" aria-hidden="true">&rarr;</span>
+      <span class="funnel-step">Dealer onboarded to AmpliFI</span>
+    </div>
+    <p>Track each step separately so conversion rates are visible.</p>
+    <p>Framing: AmpliFI is positioned around the customer&#39;s interest, not ours. Their dealers process contracts faster, which makes the agent stickier with those dealers. If you cannot articulate why the introduction benefits the customer, the signal is not ripe yet.</p>
+    <p>Preferred Partner accounts: AmpliFI activation is already part of their onboarding, so the question shifts from &ldquo;would you introduce us?&rdquo; to &ldquo;which dealers are we activating first?&rdquo;</p>
+  </div>
+
+  <div class="section-label">Expansion Signals</div>
+  <div class="pb-card">
+    <div class="sub-head">State Expansion Signals</div>
+    <ul class="step-list">
+      <li class="step-item"><span class="step-num" aria-hidden="true">1</span><div class="step-content">Territory saturation: the customer has pitched a high percentage of available dealers in their licensed states. Strongest predictor. Get into the conversation before the plateau shows up as declining usage.</div></li>
+      <li class="step-item"><span class="step-num" aria-hidden="true">2</span><div class="step-content">Border behavior: searches or expressed interest in dealers just outside their licensed territory</div></li>
+      <li class="step-item"><span class="step-num" aria-hidden="true">3</span><div class="step-content">Tier position: customers at the top of their current state tier have a low-cost marginal expansion story</div></li>
+    </ul>
+    <div class="sub-head">User Expansion Signals</div>
+    <ul class="step-list">
+      <li class="step-item"><span class="step-num" aria-hidden="true">1</span><div class="step-content">Usage concentration: one power user carrying an account with multiple licensed people is both a fragility risk and an adoption ceiling</div></li>
+      <li class="step-item"><span class="step-num" aria-hidden="true">2</span><div class="step-content">Hiring signals: new agents or reps appearing in emails, calls, or meeting transcripts. A new hire at the agency triggers a &ldquo;let&#39;s get them set up&rdquo; touch within the week.</div></li>
+    </ul>
+  </div>
+
+  <div class="section-label">Before Every Call</div>
+  <div class="role-block">
+    <h3>The Standing Three-Question Block</h3>
+    <p>Every graduation call and every check-in after includes:</p>
+    <p>1. &ldquo;Has VelociFI gotten you in front of a dealer yet?&rdquo; (or for graduated accounts: &ldquo;Any new dealer wins?&rdquo;)</p>
+    <p>2. &ldquo;Which of your dealers would be a fit for AmpliFI?&rdquo;</p>
+    <p>3. &ldquo;How&#39;s coverage in your current states, and any hiring planned this quarter?&rdquo;</p>
+    <p>Three questions, about ninety seconds. Every account touch scans for all three revenue motions.</p>
+  </div>
+
+  <div class="section-label">Pacing Rules</div>
+  <div class="pb-card">
+    <h3>Always Scanning, Rarely Asking, Never Twice in a Row</h3>
+    <ul class="step-list">
+      <li class="step-item"><span class="step-num" aria-hidden="true">1</span><div class="step-content">Questions are diagnostic, not pitches. When a signal fires, note it and decide separately whether to act. &ldquo;We&#39;re hiring two reps&rdquo; gets &ldquo;send them my way, I&#39;ll get them set up,&rdquo; not a quote.</div></li>
+      <li class="step-item"><span class="step-num" aria-hidden="true">2</span><div class="step-content">One motion per conversation, maximum. If the AmpliFI conversation is live, expansion waits for the next touchpoint. No signal decays in three weeks.</div></li>
+      <li class="step-item"><span class="step-num" aria-hidden="true">3</span><div class="step-content">Signals trigger asks, calendars do not. No signal means no conversation. An account with no saturation, no hiring, and no dealer wins just gets good service.</div></li>
+      <li class="step-item"><span class="step-num" aria-hidden="true">4</span><div class="step-content">Value confirmed before any ask. The dealer-outcome criterion must be met before pitching AmpliFI, states, or seats. Expanding a tool that has not paid for itself yet reads as pushy.</div></li>
+      <li class="step-item"><span class="step-num" aria-hidden="true">5</span><div class="step-content">Frame everything as their math. Surface their growth problem with our solution attached: &ldquo;You&#39;ve pitched 80% of the dealers in your territory&rdquo; is about their pipeline, not our revenue.</div></li>
+      <li class="step-item"><span class="step-num" aria-hidden="true">6</span><div class="step-content">Let them open the door when possible. The questions are designed to create that opening. &ldquo;We&#39;re running thin on prospects in Texas&rdquo; is the customer starting the expansion conversation themselves.</div></li>
+      <li class="step-item"><span class="step-num" aria-hidden="true">7</span><div class="step-content">60-day cooldown. Any account that has heard an expansion or AmpliFI ask in the last 60 days is off-limits for another, regardless of signals. A declined ask means log the objection and revisit next quarter, not next call.</div></li>
+    </ul>
+  </div>
+
+  <div class="section-label">Tracking</div>
+  <div class="ref-block">
+    <div class="ref-block-header"><h3><span aria-hidden="true">&#128203;</span> Tracked Fields &amp; Saved Views</h3><span class="sub">HubSpot F&amp;I Ticket</span></div>
+    <div class="tf-grid">
+      <div class="tf-col">
+        <h4>Tracked Fields (HubSpot F&amp;I Ticket)</h4>
+        <ol>
+          <li><code>training_completed_date</code></li>
+          <li><code>all_users_activated</code> (checkbox)</li>
+          <li><code>first_pitch_generated</code> (checkbox or date)</li>
+          <li><code>dealer_outcome_confirmed</code> (checkbox or date)</li>
+          <li><code>amplifi_intro_discussed</code> (date)</li>
+          <li><code>first_dealer_intro_date</code></li>
+          <li><code>expansion_signal</code> (none / users / states / both)</li>
+          <li><code>last_expansion_ask_date</code> (enforces the 60-day cooldown)</li>
+        </ol>
+      </div>
+      <div class="tf-col">
+        <h4>Saved Views to Maintain</h4>
+        <ol>
+          <li>Accounts in Phase 1 or 2 past their target date</li>
+          <li>Graduated accounts with no AmpliFI conversation logged</li>
+          <li>Graduated accounts with an expansion signal and no open expansion conversation</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TAB 5: SYSTEMS & TOOLS -->
+<div class="tab-pane" id="tab-systems" role="tabpanel" aria-labelledby="tabbtn-systems">
+  <div class="pane-header">
+    <h2>Systems &amp; Tools</h2>
+    <p>All platforms used across Customer Experience, Product, and Operations &mdash; what each does and how to access it.</p>
+  </div>
+  <div class="filter-bar" role="group" aria-label="Filter systems by category">
+    <button class="filter-btn active" data-filter="all">All Systems</button>
+    <button class="filter-btn" data-filter="crm">CRM</button>
+    <button class="filter-btn" data-filter="analytics">Analytics</button>
+    <button class="filter-btn" data-filter="comm">Communication</button>
+    <button class="filter-btn" data-filter="dev">Dev &amp; PM</button>
+    <button class="filter-btn" data-filter="product">Product</button>
+    <button class="filter-btn" data-filter="storage">Storage</button>
+  </div>
+  <div class="tool-grid" id="toolGrid">
+
+    <div class="tool-card" data-category="product">
+      <div class="card-stripe product" aria-hidden="true"></div>
+      <div class="card-body">
+        <div class="card-top"><div class="card-icon" aria-hidden="true">&#127950;</div><div class="card-title-group"><div class="card-title">VelociFI</div><span class="badge product">Product</span></div><div class="status-dot" aria-hidden="true" title="Live"></div></div>
+        <p class="card-desc">The core F&amp;I dealer intelligence and prospecting platform. Built for F&amp;I agents to find, pitch, and grow their dealer network using real-time inventory data and territory-based licensing.</p>
+        <ul class="card-details">
+          <li>Framework: <strong>Find / Pitch / Grow</strong></li>
+          <li>License model: account-level territory license, shared by all users</li>
+          <li>All accounts managed in the <strong>VelociFI F&amp;I Pipeline</strong> in HubSpot</li>
+          <li>Mobile app on iOS and Android &mdash; listed under the name <strong>Carketa</strong></li>
+          <li>Admin integrations include Endurance, DLP, MagniShield, Veritas, and Peak DS &mdash; to name a few. More integrations are available.</li>
+        </ul>
+        <div class="card-footer"><a href="https://velocifi.carketa.app/" target="_blank" rel="noopener" class="btn-access">Open VelociFI &#8594;</a></div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-category="product">
+      <div class="card-stripe product" aria-hidden="true"></div>
+      <div class="card-body">
+        <div class="card-top"><div class="card-icon" aria-hidden="true">&#9889;</div><div class="card-title-group"><div class="card-title">AmpliFI</div><span class="badge product">Product</span></div><div class="status-dot" aria-hidden="true" title="Live"></div></div>
+        <p class="card-desc">Digital F&amp;I menu, e-contracting, and rating platform used inside the dealership. The F&amp;I Manager uses it to present backend products and capture customer signatures in one digital workflow &mdash; at no cost to the dealer.</p>
+        <ul class="card-details">
+          <li><strong>Preferred Partner submission URL:</strong> amplifimenu.com/onboarding-agents &mdash; agents use this link to apply for the AmpliFI Preferred Partner program</li>
+          <li>amplifimenu.com is the main promotional website for AmpliFI</li>
+          <li>As a CSM: your goal is to get VelociFI customers ready to bring AmpliFI to their dealers. Account Managers handle all AmpliFI onboarding and activation.</li>
+        </ul>
+        <div class="card-footer">
+          <a href="https://amplifimenu.com" target="_blank" rel="noopener" class="btn-access">View AmpliFI Site &#8594;</a>
+          <a href="https://amplifimenu.com/onboarding-agents/" target="_blank" rel="noopener" class="btn-sub">Partner Submission</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-category="crm">
+      <div class="card-stripe crm" aria-hidden="true"></div>
+      <div class="card-body">
+        <div class="card-top"><div class="card-icon" aria-hidden="true">&#128994;</div><div class="card-title-group"><div class="card-title">HubSpot</div><span class="badge crm">CRM</span></div><div class="status-dot" aria-hidden="true" title="Live"></div></div>
+        <p class="card-desc">Primary CRM for all VelociFI customer lifecycle &mdash; pipeline tracking, contact records, call logging, notes, and email activity.</p>
+        <ul class="card-details">
+          <li>All F&amp;I customer accounts live in the <strong>VelociFI F&amp;I Pipeline</strong></li>
+          <li>Agent Preferred Partner applications tracked in the <strong>AmpliFI Pipeline</strong></li>
+          <li><strong>All customer activity &mdash; calls, notes, emails, and tasks &mdash; should be logged at the Company page in HubSpot</strong></li>
+        </ul>
+        <div class="card-footer"><a href="https://app.hubspot.com/login" target="_blank" rel="noopener" class="btn-access">Sign in to HubSpot &#8594;</a></div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-category="analytics">
+      <div class="card-stripe analytics" aria-hidden="true"></div>
+      <div class="card-body">
+        <div class="card-top"><div class="card-icon" aria-hidden="true">&#129428;</div><div class="card-title-group"><div class="card-title">PostHog</div><span class="badge analytics">Analytics</span></div><div class="status-dot" aria-hidden="true" title="Live"></div></div>
+        <p class="card-desc">Product analytics and source of truth for customer engagement. Tracks all in-app activity &mdash; logins, feature usage, page views, and errors. Used for account health monitoring and churn risk identification.</p>
+        <ul class="card-details">
+          <li>Search any customer by their email address to view their full usage history and in-app activity</li>
+        </ul>
+        <div class="card-footer"><a href="https://us.posthog.com/project/105481" target="_blank" rel="noopener" class="btn-access">Open PostHog &#8594;</a></div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-category="dev">
+      <div class="card-stripe dev" aria-hidden="true"></div>
+      <div class="card-body">
+        <div class="card-top"><div class="card-icon" aria-hidden="true">&#9989;</div><div class="card-title-group"><div class="card-title">ClickUp</div><span class="badge dev">Dev &amp; PM</span></div><div class="status-dot" aria-hidden="true" title="Live"></div></div>
+        <p class="card-desc">Project management and ticketing for all product and dev work. All bugs and feature requests for VelociFI are submitted here and routed through the Product team first.</p>
+        <ul class="card-details">
+          <li>Fill out the <strong>Feature &amp; Bug Intake Form</strong> located at the top of the Prod/Dev list in ClickUp for all submissions</li>
+          <li>All bugs and feature requests go through Product first &mdash; include the affected account, behavior observed, and customer impact</li>
+        </ul>
+        <div class="card-footer"><a href="https://app.clickup.com" target="_blank" rel="noopener" class="btn-access">Open ClickUp &#8594;</a></div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-category="dev">
+      <div class="card-stripe dev" aria-hidden="true"></div>
+      <div class="card-body">
+        <div class="card-top"><div class="card-icon" aria-hidden="true">&#127909;</div><div class="card-title-group"><div class="card-title">Loom</div><span class="badge dev">Dev &amp; PM</span></div><div class="status-dot" aria-hidden="true" title="Live"></div></div>
+        <p class="card-desc">Screen recording tool used to document bugs and feature requests as video. Recordings are attached to ClickUp submissions so the Product and Dev teams have full visual context.</p>
+        <ul class="card-details">
+          <li><strong>Download the Chrome extension</strong> &mdash; it is the fastest way to record and share from your browser</li>
+          <li>Record bugs with screen and audio to show exact reproduction steps</li>
+          <li>Paste the Loom link directly into your ClickUp Intake Form submission</li>
+        </ul>
+        <div class="card-footer"><a href="https://www.loom.com" target="_blank" rel="noopener" class="btn-access">Open Loom &#8594;</a></div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-category="comm">
+      <div class="card-stripe comm" aria-hidden="true"></div>
+      <div class="card-body">
+        <div class="card-top"><div class="card-icon" aria-hidden="true">&#127897;</div><div class="card-title-group"><div class="card-title">Fireflies</div><span class="badge comm">Communication</span></div><div class="status-dot" aria-hidden="true" title="Live"></div></div>
+        <p class="card-desc">AI meeting recorder and transcription. Every customer call, onboarding session, and internal meeting is captured here. Pull summaries and action items before any outreach, QBR, or account review.</p>
+        <ul class="card-details">
+          <li>Search by company name or participant email to find any account&#39;s call history</li>
+          <li>Pull alongside Gmail before all customer outreach for full context</li>
+        </ul>
+        <div class="card-footer"><a href="https://app.fireflies.ai" target="_blank" rel="noopener" class="btn-access">Open Fireflies &#8594;</a></div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-category="comm">
+      <div class="card-stripe comm" aria-hidden="true"></div>
+      <div class="card-body">
+        <div class="card-top"><div class="card-icon" aria-hidden="true">&#128172;</div><div class="card-title-group"><div class="card-title">Slack</div><span class="badge comm">Communication</span></div><div class="status-dot" aria-hidden="true" title="Live"></div></div>
+        <p class="card-desc">Primary internal communication platform for real-time coordination, deal notifications, and updates across CX, Sales, Dev, and Operations.</p>
+        <ul class="card-details">
+          <li><code>#closed_deals</code> &mdash; confirmed revenue and deal announcements</li>
+          <li><code>#velocifi-tactical-team</code> &mdash; VelociFI-specific team coordination and updates</li>
+        </ul>
+        <div class="card-footer"><a href="https://slack.com" target="_blank" rel="noopener" class="btn-access">Open Slack &#8594;</a></div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-category="comm">
+      <div class="card-stripe comm" aria-hidden="true"></div>
+      <div class="card-body">
+        <div class="card-top"><div class="card-icon" aria-hidden="true">&#128231;</div><div class="card-title-group"><div class="card-title">Gmail</div><span class="badge comm">Communication</span></div><div class="status-dot" aria-hidden="true" title="Live"></div></div>
+        <p class="card-desc">Primary email for all customer correspondence and internal communication. RingCentral SMS notifications also route here as email notifications.</p>
+        <ul class="card-details">
+          <li><strong>Make sure you have the HubSpot Gmail integration installed</strong> &mdash; this ensures all sent emails are automatically logged to HubSpot</li>
+        </ul>
+        <div class="card-footer">
+          <a href="https://mail.google.com" target="_blank" rel="noopener" class="btn-access">Open Gmail &#8594;</a>
+          <a href="https://calendar.google.com" target="_blank" rel="noopener" class="btn-sub">Calendar</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-category="comm">
+      <div class="card-stripe comm" aria-hidden="true"></div>
+      <div class="card-body">
+        <div class="card-top"><div class="card-icon" aria-hidden="true">&#128241;</div><div class="card-title-group"><div class="card-title">RingCentral</div><span class="badge comm">Communication</span></div><div class="status-dot" aria-hidden="true" title="Live"></div></div>
+        <p class="card-desc">Business phone and SMS platform for all customer calls and text communications. SMS and voicemail notifications sync to Gmail for searchability and full account context.</p>
+        <div class="card-footer"><a href="https://app.ringcentral.com" target="_blank" rel="noopener" class="btn-access">Open RingCentral &#8594;</a></div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-category="storage">
+      <div class="card-stripe storage" aria-hidden="true"></div>
+      <div class="card-body">
+        <div class="card-top"><div class="card-icon" aria-hidden="true">&#128193;</div><div class="card-title-group"><div class="card-title">Google Drive</div><span class="badge storage">Storage</span></div><div class="status-dot" aria-hidden="true" title="Live"></div></div>
+        <p class="card-desc">Cloud storage for internal documents, product guides, onboarding materials, training resources, and style references. All major versioned deliverables are stored here.</p>
+        <div class="card-footer"><a href="https://drive.google.com" target="_blank" rel="noopener" class="btn-access">Open Drive &#8594;</a></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-label">Quick Reference</div>
+  <div class="ref-block">
+    <div class="ref-block-header"><h3><span aria-hidden="true">&#9889;</span> Key Resources &amp; Locations</h3><span class="sub">Used daily across systems</span></div>
+    <div class="qr-grid">
+      <div class="qr-item"><div class="qr-label">VelociFI F&amp;I Pipeline</div><div class="qr-val">HubSpot &mdash; VelociFI F&amp;I Pipeline</div><div class="qr-note">Main pipeline for all customer accounts</div></div>
+      <div class="qr-item"><div class="qr-label">AmpliFI Pipeline</div><div class="qr-val">HubSpot &mdash; AmpliFI Pipeline</div><div class="qr-note">Tracks Preferred Partner applications</div></div>
+      <div class="qr-item"><div class="qr-label">PostHog Analytics</div><div class="qr-val">Carketa Project</div><div class="qr-note">Search customers by email to view usage</div></div>
+      <div class="qr-item"><div class="qr-label">Bug &amp; Feature Requests</div><div class="qr-val">Feature &amp; Bug Intake Form</div><div class="qr-note">At the top of the Prod/Dev list in ClickUp</div></div>
+      <div class="qr-item"><div class="qr-label">AmpliFI Partner Submission</div><div class="qr-val">amplifimenu.com/onboarding-agents</div><div class="qr-note">Share with agents to apply for Preferred Partner status</div></div>
+      <div class="qr-item"><div class="qr-label">Customer Activity</div><div class="qr-val">HubSpot Company Page</div><div class="qr-note">All calls, notes, emails, and tasks logged here</div></div>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:20px;">Submission Routing</div>
+  <div class="ref-block">
+    <div class="ref-block-header"><h3><span aria-hidden="true">&#128236;</span> Feature &amp; Bug Intake Routing</h3><span class="sub">All submissions via Intake Form in ClickUp &mdash; go through Product first</span></div>
+    <table>
+      <thead><tr><th>Issue Type</th><th>Route To</th><th>What to Include</th></tr></thead>
+      <tbody>
+        <tr><td>Bug / Broken Behavior</td><td>Product Team</td><td>Steps to reproduce, affected account, and customer impact. Attach a Loom recording if possible.</td></tr>
+        <tr><td>Feature / UX Request</td><td>Product Team</td><td>Use case, customer context, how frequently this comes up, and expected behavior.</td></tr>
+        <tr><td>Integration / API Issue</td><td>Product Team</td><td>Admin partner involved, specific error or behavior observed, and affected account.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+
+</div>
+
+</div>
+
+<script>
+var vcData = {
+  insurance:{tag:"Value Chain",tagC:"#888780",tagB:"#F1EFE8",title:"Insurance Company",body:"<p>The insurance or reinsurance company underwrites the financial risk behind every F&I product. When a consumer files a VSC or GAP claim, the money comes from Admin reserves backed by reinsurance. The insurance company's role is largely invisible to the agent but is what makes the whole chain financially viable.</p><p>VelociFI does not connect to the insurance company directly.</p>"},
+  admin:{tag:"Admin / TPA",tagC:"#3C3489",tagB:"#EEEDFE",title:"Admin (TPA) — Third Party Administrator",body:"<p>The Admin creates F&I products, sets pricing and coverage terms, and processes claims. Every VSC, GAP plan, tire and wheel contract sold at a dealership comes from an Admin.</p><p>In VelociFI, the Admin's rate data feeds directly into the Pitch section. When an agent opens Rating, selects vehicles, and pulls rates &mdash; those rates come from the Admin the agent is contracted with.</p>"},
+  agency:{tag:"F&I Agency",tagC:"#085041",tagB:"#E1F5EE",title:"F&I Agency",body:"<p>The F&I agency is the distributor. It holds contracts with one or more Admins and employs or contracts individual F&I agents to place products into dealerships.</p><p>The agency is responsible for training agents, managing compliance, tracking performance, and maintaining the Admin relationship. In smaller agencies, the principal also functions as the field agent.</p>"},
+  agent:{tag:"F&I Agent — Primary User",tagC:"#0C447C",tagB:"#E6F1FB",title:"F&I Agent",body:"<p>The F&I agent is the primary VelociFI user. Everything in the platform is built around their daily workflow: finding dealers, pitching with a rate presentation, and managing their territory over time.</p><p>A field agent spends most of their time driving their territory, visiting dealership F&I Managers, and getting their Admin's products placed into stores. Adoption is the measure of onboarding success.</p>"},
+  dealer:{tag:"Dealer",tagC:"#712B13",tagB:"#FAECE7",title:"Dealer",body:"<p>The dealership is the point of sale. When a consumer buys a vehicle, the F&I Manager presents a menu of backend products. Every product sold earns the dealership a reserve, and the premium gets remitted back to the Admin.</p><p>The dealer is not a VelociFI user. Dealers appear in Territory Insights as prospecting targets and in the Dealer Profile as CRM records &mdash; but they never use VelociFI themselves.</p>"},
+  consumer:{tag:"Consumer",tagC:"#27500A",tagB:"#EAF3DE",title:"Consumer",body:"<p>The consumer is the car buyer &mdash; the person who purchases the vehicle and F&I products. They are the end point of the value chain.</p><p>VelociFI has no direct connection to the consumer. The platform is entirely on the supply side, helping agents build and manage the distribution network.</p>"},
+  find:{tag:"VelociFI — Find",tagC:"#0C447C",tagB:"#E6F1FB",title:"Find — Territory Insights",body:"<p>Territory Insights is the prospecting tool. The agent enters a zip code or state, sets a radius, and VelociFI returns dealerships with inventory volume, sold percentages, and product eligibility indicators.</p><p>Key insight: dealers with high sold volume and low product penetration. High SOLD % with low INV % means they sell the right cars but aren't using your products on those deals.</p>"},
+  pitch:{tag:"VelociFI — Pitch",tagC:"#3C3489",tagB:"#EEEDFE",title:"Pitch — Rate Presentation",body:"<p>The Rating feature is the pitch tool. The agent opens a dealer's profile, selects vehicles from their live inventory, and pulls rates from their connected Admin in real time.</p><p>VelociFI returns eligible products for each vehicle based on mileage, year, and price. The agent filters, selects products to present, and downloads a PDF rate presentation. No manual quoting.</p>"},
+  grow:{tag:"VelociFI — Grow",tagC:"#085041",tagB:"#E1F5EE",title:"Grow — CRM & Territory Management",body:"<p>The Manage section is the CRM layer. Once an agent identifies dealers and starts building relationships, Grow is how they keep track of everything.</p><p>The Pipeline is a Kanban board where dealers move through stages from Qualified through Installed. Tasks and Notes attach to each dealer record. Routes build optimized driving paths. Reports give a full export of everything in the pipeline.</p>"},
+  amplifi:{tag:"AmpliFI",tagC:"#712B13",tagB:"#FAECE7",title:"AmpliFI — Digital F&I Menu, E-Contracting & Rating",body:"<p>AmpliFI is a digital F&I menu, e-contracting, and rating platform used inside the dealership. The F&I Manager uses it to present the product menu, generate rates, and capture the customer's signature on contracts &mdash; all in one digital workflow, at no cost to the dealer.</p><p>Dealers access AmpliFI exclusively through an agent who is an AmpliFI Preferred Partner. As a CSM, your goal is to get VelociFI customers ready to bring AmpliFI to their dealers. Account Managers handle all AmpliFI onboarding and activation.</p><p>An agent with multiple AmpliFI-activated dealerships is deeply embedded and significantly less likely to churn.</p>"}
+};
+
+function showVC(id){
+  var d=vcData[id]; if(!d) return;
+  var panel=document.getElementById("vc-detail");
+  var tag=document.getElementById("vc-tag");
+  tag.textContent=d.tag; tag.style.color=d.tagC; tag.style.background=d.tagB; tag.style.border="1px solid "+d.tagC+"44";
+  document.getElementById("vc-title").textContent=d.title;
+  document.getElementById("vc-body").innerHTML=d.body;
+  panel.classList.add("active");
+  panel.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function closeDetail(){ document.getElementById("vc-detail").classList.remove("active"); }
+
+// SVG value-chain boxes — delegated click + keyboard activation
+document.querySelectorAll(".entity-box,.platform-box").forEach(function(box){
+  var id=box.getAttribute("data-vc");
+  if(!id) return;
+  box.addEventListener("click",function(){ showVC(id); });
+  box.addEventListener("keydown",function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); showVC(id); }
+  });
+});
+
+// Close button for value chain detail
+var _closeBtn=document.querySelector(".vc-detail .close-btn");
+if(_closeBtn) _closeBtn.addEventListener("click",closeDetail);
+
+// Tab switching — also updates URL hash so tabs are linkable
+function activateTab(id){
+  var btn=document.querySelector('[data-tab="'+id+'"]');
+  var pane=document.getElementById("tab-"+id);
+  if(!btn||!pane) return false;
+  document.querySelectorAll(".tab-btn").forEach(function(b){ b.classList.remove("active"); b.setAttribute("aria-selected","false"); });
+  document.querySelectorAll(".tab-pane").forEach(function(p){ p.classList.remove("active"); });
+  btn.classList.add("active"); btn.setAttribute("aria-selected","true");
+  pane.classList.add("active");
+  var vc=document.getElementById("vc-detail");
+  if(vc) vc.classList.remove("active");
+  try{ history.replaceState(null,"","#tab-"+id); }catch(e){}
+  return true;
+}
+document.querySelectorAll(".tab-btn").forEach(function(btn){
+  btn.addEventListener("click",function(){ activateTab(btn.dataset.tab); });
+});
+// On load, restore tab from URL hash (e.g. #tab-systems or #tab-product&acc-rating-style — only the tab segment is used)
+(function restoreTabFromHash(){
+  var h=(location.hash||"").replace(/^#/,"");
+  if(!h) return;
+  // Support both #tab-systems and #acc-something (jump to product tab)
+  if(h.indexOf("tab-")===0){
+    activateTab(h.replace("tab-",""));
+  } else if(h.indexOf("acc-")===0){
+    activateTab("product");
+    setTimeout(function(){ jumpTo(h); },50);
+  } else if(h.indexOf("pb-")===0){
+    activateTab("playbook");
+    setTimeout(function(){ jumpTo(h); },50);
+  }
+})();
+
+// Tool card filtering
+document.querySelectorAll(".filter-btn").forEach(function(btn){
+  btn.addEventListener("click",function(){
+    document.querySelectorAll(".filter-btn").forEach(function(b){ b.classList.remove("active"); });
+    btn.classList.add("active");
+    var f=btn.dataset.filter;
+    document.querySelectorAll("#toolGrid .tool-card").forEach(function(c){
+      c.classList.toggle("hidden", f!=="all" && c.dataset.category!==f);
+    });
+  });
+});
+
+// Accordion — delegated so all .acc-header buttons just work
+function syncAccAria(item){
+  var h=item.querySelector(".acc-header");
+  if(h) h.setAttribute("aria-expanded", item.classList.contains("open") ? "true" : "false");
+}
+document.querySelectorAll(".acc-header").forEach(function(h){
+  h.addEventListener("click",function(){
+    var item=h.parentElement;
+    item.classList.toggle("open");
+    syncAccAria(item);
+  });
+});
+
+// Jump nav — real anchor links, but intercept to also expand the target accordion
+function jumpTo(id){
+  var el=document.getElementById(id); if(!el) return;
+  el.classList.add("open");
+  syncAccAria(el);
+  setTimeout(function(){ el.scrollIntoView({behavior:"smooth",block:"start"}); },60);
+}
+document.querySelectorAll(".prod-jump a[data-jump]").forEach(function(a){
+  a.addEventListener("click",function(e){
+    e.preventDefault();
+    var id=a.getAttribute("data-jump");
+    jumpTo(id);
+    try{ history.replaceState(null,"","#"+id); }catch(_e){}
+  });
+});
+
+// Product search
+var _curQ="";
+var _origBodies={};
+var _si=document.getElementById("prod-search");
+if(_si){
+  _si.addEventListener("input",function(){ searchProd(this.value); });
+  _si.addEventListener("keydown",function(e){
+    if(e.key==="Escape"){ clearProdSearch(); }
+    if(e.key==="Enter"){
+      var first=document.querySelector("#prod-results .sr-item");
+      if(first) first.click();
+    }
+  });
+}
+var _sc=document.getElementById("prod-clear");
+if(_sc){ _sc.addEventListener("click",function(){ clearProdSearch(); }); }
+
+function escH(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+function buildSnippet(text,term){
+  var lower=text.toLowerCase(),tl=term.toLowerCase();
+  var pos=lower.indexOf(tl); if(pos===-1) return "";
+  var s=Math.max(0,pos-60), e=Math.min(text.length,pos+term.length+90);
+  return (s>0?"&hellip;":"")+escH(text.substring(s,pos))+"<mark class='search-hl'>"+escH(text.substring(pos,pos+term.length))+"</mark>"+escH(text.substring(pos+term.length,e))+(e<text.length?"&hellip;":"");
+}
+
+function restoreBodies(){
+  for(var id in _origBodies){
+    var item=document.getElementById(id);
+    if(item){ var b=item.querySelector(".acc-body"); if(b) b.innerHTML=_origBodies[id]; }
+  }
+}
+
+function highlightBody(item,term){
+  var body=item.querySelector(".acc-body"); if(!body||!term) return;
+  if(_origBodies[item.id]===undefined) _origBodies[item.id]=body.innerHTML;
+  else body.innerHTML=_origBodies[item.id];
+  var tl=term.toLowerCase();
+  var walker=document.createTreeWalker(body,NodeFilter.SHOW_TEXT,null,false);
+  var nodes=[],n;
+  while((n=walker.nextNode())){ if(n.nodeValue.toLowerCase().indexOf(tl)>-1) nodes.push(n); }
+  nodes.forEach(function(node){
+    var text=node.nodeValue,lower=text.toLowerCase();
+    var frag=document.createDocumentFragment(),idx=0,pos;
+    while((pos=lower.indexOf(tl,idx))>-1){
+      frag.appendChild(document.createTextNode(text.substring(idx,pos)));
+      var m=document.createElement("mark"); m.className="search-hl"; m.textContent=text.substring(pos,pos+term.length);
+      frag.appendChild(m);
+      idx=pos+term.length;
+    }
+    frag.appendChild(document.createTextNode(text.substring(idx)));
+    node.parentNode.replaceChild(frag,node);
+  });
+}
+
+function searchProd(q){
+  var clr=document.getElementById("prod-clear");
+  var panel=document.getElementById("prod-results");
+  if(clr) clr.style.display=q?"block":"none";
+  restoreBodies();
+  _curQ=q?q.trim():"";
+  if(!_curQ){ if(panel){panel.style.display="none";panel.innerHTML="";} return; }
+  var ql=_curQ.toLowerCase(), results=[], total=0;
+  document.querySelectorAll("#tab-product .acc-item").forEach(function(item){
+    var body=item.querySelector(".acc-body");
+    var titleEl=item.querySelector(".acc-title");
+    var numEl=item.querySelector(".acc-num");
+    var bodyText=body?body.textContent:"";
+    var fullText=(titleEl?titleEl.textContent+" ":"")+bodyText;
+    var lower=fullText.toLowerCase(),count=0,idx=0;
+    while((idx=lower.indexOf(ql,idx))>-1){ count++; idx+=ql.length; }
+    if(count>0){
+      total+=count;
+      results.push({id:item.id,num:numEl?numEl.textContent:"",title:titleEl?titleEl.textContent:"",count:count,snippet:buildSnippet(bodyText||fullText,_curQ)});
+    }
+  });
+  if(!panel) return;
+  if(!results.length){
+    panel.innerHTML="<div class='sr-empty'>No matches for &ldquo;"+escH(_curQ)+"&rdquo;.</div>";
+    panel.style.display="block"; return;
+  }
+  var html="<div class='sr-head'>"+total+" match"+(total===1?"":"es")+" in "+results.length+" section"+(results.length===1?"":"s")+" &mdash; click a result to open it</div>";
+  results.forEach(function(r){
+    html+="<div class='sr-item' tabindex='0' role='button' data-open='"+r.id+"'><span class='sr-num'>"+escH(r.num)+"</span><div class='sr-main'><div class='sr-title'>"+escH(r.title)+"</div><div class='sr-snippet'>"+r.snippet+"</div></div><span class='sr-count'>"+r.count+"</span></div>";
+  });
+  panel.innerHTML=html; panel.style.display="block";
+  // Wire up results (delegated)
+  panel.querySelectorAll(".sr-item").forEach(function(item){
+    var id=item.getAttribute("data-open");
+    item.addEventListener("click",function(){ openResult(id); });
+    item.addEventListener("keydown",function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openResult(id); }
+    });
+  });
+}
+
+function openResult(id){
+  var item=document.getElementById(id); if(!item) return;
+  item.classList.add("open"); syncAccAria(item);
+  highlightBody(item,_curQ);
+  setTimeout(function(){
+    var firstMark=item.querySelector(".acc-body mark.search-hl");
+    if(firstMark){ firstMark.scrollIntoView({behavior:"smooth",block:"center"}); }
+    else{ item.scrollIntoView({behavior:"smooth",block:"start"}); }
+  },80);
+}
+
+function clearProdSearch(){
+  var el=document.getElementById("prod-search"); if(el) el.value="";
+  restoreBodies(); _curQ="";
+  var panel=document.getElementById("prod-results");
+  if(panel){ panel.style.display="none"; panel.innerHTML=""; }
+  var clr=document.getElementById("prod-clear"); if(clr) clr.style.display="none";
+  document.querySelectorAll("#tab-product .acc-item").forEach(function(i){i.classList.remove("open"); syncAccAria(i); i.style.display="";});
+  var ov=document.getElementById("acc-overview"); if(ov){ ov.classList.add("open"); syncAccAria(ov); }
+}
+</script>
+</body>
+</html>
